@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "apps/api-gateway-service"
+		},
+		{
+			"path": "apps/authentication-service"
+		},
+		{
+			"path": "apps/medical-consultation-service"
+		},
+		{
+			"path": "apps/medical-information-service"
+		},
+		{
+			"path": "apps/medical-assistance-service"
+		},
+		{
+			"path": "apps/diagnostic-service"
+		}
+	],
+	"settings": {}
+}
