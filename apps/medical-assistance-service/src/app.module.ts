@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { RecommendationModule } from './recommendation/recommendation.module';
-import { SuggestionModule } from './suggestion/suggestion.module';
+import { DatabaseModule } from './infrastructure/database/database.module';
+import { ConfigModule } from '@nestjs/config';
+import { RecommendationModule } from './application/recommendation/recommendation.module';
+import { SuggestionModule } from './application/suggestion/suggestion.module';
 
 @Module({
-  imports: [RecommendationModule, SuggestionModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [ConfigModule.forRoot(), RecommendationModule, SuggestionModule, DatabaseModule],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

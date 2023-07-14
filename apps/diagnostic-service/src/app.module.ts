@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { DiagnosticModule } from './diagnostic/diagnostic.module';
-import { MedicalPrescriptionModule } from './medical-prescription/medical-prescription.module';
+import { DiagnosticModule } from './application/diagnostic/diagnostic.module';
+import { MedicalPrescriptionModule } from './application/medical-prescription/medical-prescription.module';
+import { DatabaseModule } from './infrastructure/database/database.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [DiagnosticModule, MedicalPrescriptionModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [ConfigModule.forRoot(), DiagnosticModule, MedicalPrescriptionModule, DatabaseModule],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
