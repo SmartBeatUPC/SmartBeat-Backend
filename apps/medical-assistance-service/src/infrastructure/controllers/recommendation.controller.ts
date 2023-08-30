@@ -24,8 +24,8 @@ export class RecommendationController {
   }
 
   @MessagePattern('updateRecommendation')
-  update(@Payload() updateRecommendationDto: UpdateRecommendationDto) {
-    return this.recommendationService.update(updateRecommendationDto.id, updateRecommendationDto);
+  update(@Payload() id: number, updateRecommendationDto: UpdateRecommendationDto) {
+    return this.recommendationService.update(id, updateRecommendationDto);
   }
 
   @MessagePattern('removeRecommendation')

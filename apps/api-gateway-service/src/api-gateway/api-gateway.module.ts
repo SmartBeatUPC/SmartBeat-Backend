@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ApiGatewayService } from './api-gateway.service';
-import { ApiGatewayController } from './api-gateway.controller';
+import { AuthenticationModule } from './authentication/authentication.module';
+import { MedicalAssistanceModule } from './medical-assistance/medical-assistance.module';
+import { MedicalConsultationModule } from './medical-consultation/medical-consultation.module';
+import { MedicalInformationModule } from './medical-information/medical-information.module';
+import { DiagnosticModule } from './diagnostic/diagnostic.module';
 
 @Module({
-  controllers: [ApiGatewayController],
-  providers: [ApiGatewayService]
+  imports: [AuthenticationModule, MedicalAssistanceModule, MedicalConsultationModule, MedicalInformationModule, DiagnosticModule]
 })
 export class ApiGatewayModule {}
