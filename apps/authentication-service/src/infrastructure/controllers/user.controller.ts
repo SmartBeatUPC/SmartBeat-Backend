@@ -7,28 +7,35 @@ import { UserServiceImpl, CreateUserDto, UpdateUserDto } from 'src/application/i
 export class UserController {
   constructor(private readonly userService: UserServiceImpl) {}
 
-  @MessagePattern('createUser')
-  create(@Payload() createUserDto: CreateUserDto) {
+  @MessagePattern({cmd: 'createUser'})
+  create(createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
-  @MessagePattern('findAllUser')
+  @MessagePattern({cmd: 'findAllUsers'})
   findAll() {
     return this.userService.findAll();
   }
 
-  @MessagePattern('findOneUser')
-  findOne(@Payload() id: number) {
+  @MessagePattern({cmd: 'findOneUser'})
+  findOne(id: number) {
     return this.userService.findOne(id);
   }
 
-  @MessagePattern('updateUser')
-  update(@Payload() updateUserDto: UpdateUserDto) {
-    return this.userService.update(updateUserDto.id, updateUserDto);
+  @MessagePattern({cmd: 'verifyUser'})
+  verifyUser(data: {email: string, password: string}) {
+    const {email, password} = data
+    return this.userService.verifyUser(email, password);
   }
 
-  @MessagePattern('removeUser')
-  remove(@Payload() id: number) {
+  @MessagePattern({cmd: 'updateUser'})
+  update(data: {id: number, updateUserDto: UpdateUserDto}) {
+    const {id, updateUserDto} = data
+    return this.userService.update(id, updateUserDto);
+  }
+
+  @MessagePattern({cmd: 'removeUser'})
+  remove(id: number) {
     return this.userService.remove(id);
   }
 }

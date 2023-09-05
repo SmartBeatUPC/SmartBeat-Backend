@@ -7,28 +7,21 @@ import { PpgServiceImpl, CreatePpgDto, UpdatePpgDto } from 'src/application/inde
 export class PpgController {
   constructor(private readonly ppgService: PpgServiceImpl) {}
 
-  @MessagePattern('createPpg')
-  create(@Payload() createPpgDto: CreatePpgDto) {
-    return this.ppgService.create(createPpgDto);
+  @MessagePattern({cmd: 'createPpg'})
+  create(data:{informationId: number,createPpgDto: CreatePpgDto}) {
+    const {informationId, createPpgDto} = data
+    return this.ppgService.create(informationId, createPpgDto);
   }
 
-  @MessagePattern('findAllPpg')
-  findAll() {
-    return this.ppgService.findAll();
+  @MessagePattern({cmd: 'findPPGByInformationId'})
+  findPPGByInformationId(informationId: number) {
+    return this.ppgService.findPPGByInformationId(informationId);
   }
 
-  @MessagePattern('findOnePpg')
-  findOne(@Payload() id: number) {
-    return this.ppgService.findOne(id);
+  @MessagePattern({cmd: 'updatePpg'})
+  update(data: {id: number, updatePpgDto: UpdatePpgDto}) {
+    const {id, updatePpgDto} = data
+    return this.ppgService.update(id, updatePpgDto);
   }
 
-  @MessagePattern('updatePpg')
-  update(@Payload() updatePpgDto: UpdatePpgDto) {
-    return this.ppgService.update(updatePpgDto.id, updatePpgDto);
-  }
-
-  @MessagePattern('removePpg')
-  remove(@Payload() id: number) {
-    return this.ppgService.remove(id);
-  }
 }

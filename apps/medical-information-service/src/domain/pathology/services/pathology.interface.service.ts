@@ -1,9 +1,8 @@
 import { CreatePathologyDto, UpdatePathologyDto } from "src/application/index.application";
 
 export interface PathologyService{
-    create(createPathologyDto: CreatePathologyDto);
+    create(informationId: number, createPathologyDto: CreatePathologyDto);
     findAll();
-    findOne(id: number);
+    findPathologyByMedicalInformationId(informationId);
     update(id: number, updatePathologyDto: UpdatePathologyDto);
-    remove(id: number);
 }

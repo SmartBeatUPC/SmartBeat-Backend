@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MedicalConsultationServiceImpl } from '../index.application';
 import { MedicalConsultationController } from 'src/infrastructure/index.controller';
-import { MedicalConsultation } from 'src/domain/index.domain';
+import { MedicalConsultation, MedicalRecord } from 'src/domain/index.domain';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 
@@ -9,7 +9,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   controllers: [MedicalConsultationController],
   providers: [MedicalConsultationServiceImpl],
   imports:[
-    TypeOrmModule.forFeature([MedicalConsultation])
+    TypeOrmModule.forFeature([MedicalConsultation]),
+    TypeOrmModule.forFeature([MedicalRecord])
   ]
 })
 export class MedicalConsultationModule {}

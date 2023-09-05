@@ -6,11 +6,11 @@ export class Recommendation {
     id: number;
 
     @Column('varchar',{
-        length: 15
+        length: 400
     })
     recommendation: string;
 
-    @Column('number',{
+    @Column('int',{
         name: 'medical_record_id'
     })
     medicalRecordId: number;

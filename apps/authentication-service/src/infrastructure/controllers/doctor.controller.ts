@@ -8,27 +8,33 @@ export class DoctorController {
   constructor(private readonly doctorService: DoctorServiceImpl) {}
 
   @MessagePattern('createDoctor')
-  create(@Payload() createDoctorDto: CreateDoctorDto) {
+  create(createDoctorDto: CreateDoctorDto) {
     return this.doctorService.create(createDoctorDto);
   }
 
-  @MessagePattern('findAllDoctor')
+  @MessagePattern({cmd: 'findAllDoctors'})
   findAll() {
     return this.doctorService.findAll();
   }
 
-  @MessagePattern('findOneDoctor')
-  findOne(@Payload() id: number) {
+  @MessagePattern({cmd: 'findOneDoctor'})
+  findOne(id: number) {
     return this.doctorService.findOne(id);
   }
 
-  @MessagePattern('updateDoctor')
-  update(@Payload() updateDoctorDto: UpdateDoctorDto) {
-    return this.doctorService.update(updateDoctorDto.id, updateDoctorDto);
+  @MessagePattern({cmd: 'findOneDoctorByUserId'})
+  findByUserId(userId: number) {
+    return this.doctorService.findByUserId(userId);
   }
 
-  @MessagePattern('removeDoctor')
-  remove(@Payload() id: number) {
+  @MessagePattern({cmd: 'updateDoctor'})
+  update(data: {id: number, updateDoctorDto: UpdateDoctorDto}) {
+    const {id, updateDoctorDto} = data
+    return this.doctorService.update(id, updateDoctorDto);
+  }
+
+  @MessagePattern({cmd: 'removeDoctor'})
+  remove(id: number) {
     return this.doctorService.remove(id);
   }
 }

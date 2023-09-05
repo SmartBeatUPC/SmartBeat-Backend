@@ -1,39 +1,42 @@
-import { Controller, UseFilters, Inject, Post, Body, Get, Param, Patch, Delete } from "@nestjs/common";
+import { Controller, UseFilters, Inject, Post, Body, Get, Param, Patch, Delete, ParseIntPipe } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { ApiTags } from "@nestjs/swagger";
 import { HttpExceptionFilter } from "src/api-gateway/util/http-exception.filter";
 import { RequestDiagnosticDto } from "../models/diagnostic.dto";
+import { RequestMedicalPrescriptionDto } from "../models/medical-prescription.dto";
 
-@ApiTags('Diagnostics')
-@Controller('Diagnostic')
+@ApiTags('diagnostics')
+@Controller('diagnostic')
 @UseFilters(new HttpExceptionFilter())
 export class DiagnosticController {
   
-    constructor(@Inject('DIAGNOSTIC_SERVICE') private DiagnosticService: ClientProxy) {}
+    constructor(@Inject('DIAGNOSTIC_SERVICE') private diagnosticService: ClientProxy) {}
 
-    @Post()
-    createDiagnostic(@Body() createDiagnosticDto: RequestDiagnosticDto) {
-        return this.DiagnosticService.send({ cmd: 'createDiagnostic' }, createDiagnosticDto);
+    @Post('/medical-consultation/:consultationId')
+    createDiagnostic(@Param('consultationId', ParseIntPipe)consultationId: number, @Body() createDiagnosticDto: RequestDiagnosticDto) {
+        return this.diagnosticService.send({ cmd: 'createDiagnostic' }, {consultationId,createDiagnosticDto});
     }
   
     @Get()
     findAllDiagnostics() {
-        return this.DiagnosticService.send({ cmd: 'findAllDiagnostics' }, '');
+        return this.diagnosticService.send({ cmd: 'findAllDiagnostics' }, '');
     }
   
     @Get(':id')
-    findOneDiagnostic(@Param('id') id: number) {
-        return this.DiagnosticService.send({ cmd: 'findOneDiagnostic' }, id);
+    findOneDiagnostic(@Param('id', ParseIntPipe) id: number) {
+        return this.diagnosticService.send({ cmd: 'findOneDiagnostic' }, id);
     }
   
   
     @Patch(':id')
-    updateDiagnostic(@Param('id') id: number, @Body() updateDiagnosticDto: RequestDiagnosticDto) {
-        return this.DiagnosticService.send({ cmd: 'updateDiagnostic' }, {id, updateDiagnosticDto});
+    updateDiagnostic(@Param('id', ParseIntPipe) id: number, @Body() updateDiagnosticDto: RequestDiagnosticDto) {
+        return this.diagnosticService.send({ cmd: 'updateDiagnostic' }, {id, updateDiagnosticDto});
     }
   
-    @Delete(':id')
-    removeDiagnostic(@Param('id') id: number) {
-        return this.DiagnosticService.send({ cmd: 'removeDiagnostic' }, id);
+
+    //Medical Prescription
+    @Post(':id/medical-prescription')
+    createMedicalPrescription(@Param('id', ParseIntPipe) id: number, createMedicalPrescriptionDto: RequestMedicalPrescriptionDto) {
+        return this.diagnosticService.send({ cmd: 'createMedicalPrescription' },{id, createMedicalPrescriptionDto});
     }
 }

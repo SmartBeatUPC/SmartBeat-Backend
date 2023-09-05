@@ -1,28 +1,77 @@
 import { Injectable } from '@nestjs/common';
-import { MedicalRecordService } from 'src/domain/index.domain';
+import { MedicalConsultation, MedicalRecord, MedicalRecordService } from 'src/domain/index.domain';
 import { CreateMedicalRecordDto } from '../dto/create-medical-record.dto';
-import { UpdateMedicalRecordDto } from '../dto/update-medical-record.dto';
+import { MedicalRecordResponse, UpdateMedicalRecordDto } from '../dto/update-medical-record.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { MedicalConsultationResponse } from 'src/application/medical-consultation/dto/update-medical-consultation.dto';
+import { Repository } from 'typeorm';
+import { plainToInstance } from "class-transformer";
 
 
 @Injectable()
 export class MedicalRecordServiceImpl implements MedicalRecordService{
-  create(createMedicalRecordDto: CreateMedicalRecordDto) {
-    return 'This action adds a new medicalRecord';
-  }
 
+  constructor(@InjectRepository(MedicalConsultation) private medicalConsultationRepository: Repository<MedicalConsultation>,
+  @InjectRepository(MedicalRecord) private medicalRecordRepository: Repository<MedicalRecord>){}
+  
   findAll() {
-    return `This action returns all medicalRecord`;
+    return this.medicalRecordRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} medicalRecord`;
+  
+  async findOne(id: number) {
+    try{
+      const medicalRecordExist =  await this.medicalRecordRepository.findOne({where: {id: id}});
+
+      if (!medicalRecordExist) {
+      return new MedicalRecordResponse(`Medical Record with id ${id} is not registered`);
+      }
+      return new MedicalRecordResponse('',medicalRecordExist);
+    }catch(error){
+      return new MedicalRecordResponse(`An error ocurred when finding ` + error.message);
+    }
   }
 
-  update(id: number, updateMedicalRecordDto: UpdateMedicalRecordDto) {
-    return `This action updates a #${id} medicalRecord`;
+  async findByIdAndMedicalConsultationId(consultationId: number, id: number){
+    try{const medical_consultation = await this.medicalConsultationRepository.findOneBy({ id: consultationId });
+    if (!medical_consultation) return new MedicalRecordResponse(`A Medical Consultation with id ${consultationId} was not found`);
+
+    const medicalRecordExist = await this.medicalRecordRepository.findOne({
+        where: {
+            id:id,
+            medical_consultation: {
+                id: consultationId
+            }
+        },
+        relations: ['medical_consultation']
+    });
+
+    if(!medicalRecordExist) return new MedicalRecordResponse(`Medical Record with Medical Consultation Id ${consultationId} was not found`)
+
+    return new MedicalRecordResponse('',medicalRecordExist);
+    }catch(error){
+      return new MedicalRecordResponse(`An error ocurred when finding medical-record: ` + error.message);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} medicalRecord`;
+  async findAllMedicalRecordsByMedicalConsultationId(consultationId: number) {
+    try{
+      const medical_consultation = await this.medicalConsultationRepository.findOneBy({ id: consultationId });
+      if (!medical_consultation) return new MedicalRecordResponse(`A Medical Consultation with id ${consultationId} was not found`);
+
+      const MedicalRecords = await this.medicalRecordRepository.find({
+          where: {
+              medical_consultation: {
+                  id: consultationId
+              }
+          },
+          relations: ['medical_consultation']
+      });
+
+      return MedicalRecords;
+    }catch(error){
+    return new MedicalRecordResponse(`An error ocurred when finding medical-record: ` + error.message);
+    }
   }
+
 }

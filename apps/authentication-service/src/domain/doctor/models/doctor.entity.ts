@@ -22,7 +22,18 @@ export class Doctor {
     @Column('varchar',{
         length: 10
     })
+    gender: string;
+
+    @Column('varchar',{
+        length: 10
+    })
     dni: string;
+
+    @Column('varchar',{
+        length: 15,
+        nullable: true,
+    })
+    phone: string;
 
     @Column('int',{
         name: 'user_id',
@@ -30,10 +41,4 @@ export class Doctor {
     })
     userId: number;
 
-    @OneToMany(
-        () => DoctorCenter,
-        (doctor_center) => doctor_center.doctor,
-        { cascade: true }
-    )
-    doctor_centers: DoctorCenter[];
 }

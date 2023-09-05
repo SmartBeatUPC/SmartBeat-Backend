@@ -7,16 +7,16 @@ export class Suggestion {
     id: number;
 
     @Column('varchar',{
-        length: 15
+        length: 400
     })
     suggestion: string;
 
     @Column('varchar',{
-        length: 15
+        length: 400
     })
     alternative: string;
 
-    @Column('number',{
+    @Column('int',{
         name: 'medical_record_id'
     })
     medicalRecordId: number;

@@ -7,28 +7,24 @@ import { MedicalRecordServiceImpl, CreateMedicalRecordDto, UpdateMedicalRecordDt
 export class MedicalRecordController {
   constructor(private readonly medicalRecordService: MedicalRecordServiceImpl) {}
 
-  @MessagePattern('createMedicalRecord')
-  create(@Payload() createMedicalRecordDto: CreateMedicalRecordDto) {
-    return this.medicalRecordService.create(createMedicalRecordDto);
-  }
-
-  @MessagePattern('findAllMedicalRecord')
+  @MessagePattern({cmd:'findAllMedicalRecord'})
   findAll() {
     return this.medicalRecordService.findAll();
   }
 
-  @MessagePattern('findOneMedicalRecord')
+  @MessagePattern({cmd:'findOneMedicalRecord'})
   findOne(@Payload() id: number) {
     return this.medicalRecordService.findOne(id);
   }
 
-  @MessagePattern('updateMedicalRecord')
-  update(@Payload() updateMedicalRecordDto: UpdateMedicalRecordDto) {
-    return this.medicalRecordService.update(updateMedicalRecordDto.id, updateMedicalRecordDto);
+  @MessagePattern({cmd:'findOneMedicalRecordByIdAndMedicalConsultationId'})
+  findOneMedicalRecordByIdAndMedicalConsultationId(data: {consultationId: number, id: number}) {
+    const {consultationId, id} = data
+    return this.medicalRecordService.findByIdAndMedicalConsultationId(consultationId, id);
   }
 
-  @MessagePattern('removeMedicalRecord')
-  remove(@Payload() id: number) {
-    return this.medicalRecordService.remove(id);
+  @MessagePattern({cmd:'findAllMedicalRecordsByMedicalConsultationId'})
+  findAllMedicalRecordsByMedicalConsultationId(consultationId: number) {
+    return this.medicalRecordService.findAllMedicalRecordsByMedicalConsultationId(consultationId);
   }
 }

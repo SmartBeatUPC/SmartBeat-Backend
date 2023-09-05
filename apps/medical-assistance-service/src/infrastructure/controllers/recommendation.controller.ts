@@ -8,28 +8,30 @@ import { CreateRecommendationDto, RecommendationServiceImpl, UpdateRecommendatio
 export class RecommendationController {
   constructor(private readonly recommendationService: RecommendationServiceImpl) {}
 
-  @MessagePattern('createRecommendation')
-  create(@Payload() createRecommendationDto: CreateRecommendationDto) {
-    return this.recommendationService.create(createRecommendationDto);
+  @MessagePattern({cmd: 'createRecommendation'})
+  create(data: { recordId: number, createRecommendationDto: CreateRecommendationDto}) {
+    const {recordId, createRecommendationDto} = data
+    return this.recommendationService.create(recordId, createRecommendationDto);
   }
 
-  @MessagePattern('findAllRecommendation')
+  @MessagePattern({cmd: 'findAllRecommendations'})
   findAll() {
     return this.recommendationService.findAll();
   }
 
-  @MessagePattern('findOneRecommendation')
+  @MessagePattern({cmd: 'findOneRecommendation'})
   findOne(@Payload() id: number) {
     return this.recommendationService.findOne(id);
   }
 
-  @MessagePattern('updateRecommendation')
-  update(@Payload() id: number, updateRecommendationDto: UpdateRecommendationDto) {
+  @MessagePattern({cmd: 'updateRecommendation'})
+  update(data: {id: number, updateRecommendationDto: UpdateRecommendationDto}) {
+    const {id, updateRecommendationDto} = data;
     return this.recommendationService.update(id, updateRecommendationDto);
   }
 
-  @MessagePattern('removeRecommendation')
-  remove(@Payload() id: number) {
-    return this.recommendationService.remove(id);
+  @MessagePattern({cmd: 'generateGPTRecommendation'})
+  assistanceGPT() {
+    return this.recommendationService.startOpenAI();
   }
 }

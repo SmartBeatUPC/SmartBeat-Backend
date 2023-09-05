@@ -4,7 +4,4 @@ export class CreateRecommendationDto {
     @IsString()
     recommendation: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    medicalRecordId: number;
 }

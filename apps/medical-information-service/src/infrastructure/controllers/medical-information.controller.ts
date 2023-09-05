@@ -7,28 +7,32 @@ import { MedicalInformationServiceImpl, CreateMedicalInformationDto, UpdateMedic
 export class MedicalInformationController {
   constructor(private readonly medicalInformationService: MedicalInformationServiceImpl) {}
 
-  @MessagePattern('createMedicalInformation')
-  create(@Payload() createMedicalInformationDto: CreateMedicalInformationDto) {
-    return this.medicalInformationService.create(createMedicalInformationDto);
+  @MessagePattern({cmd: 'createMedicalInformation'})
+  create(data:{ recordId: number, createMedicalInformationDto: CreateMedicalInformationDto}) {
+    const {recordId, createMedicalInformationDto} = data
+    return this.medicalInformationService.create(recordId, createMedicalInformationDto);
   }
 
-  @MessagePattern('findAllMedicalInformation')
+  @MessagePattern({cmd: 'findAllMedicalInformation'})
   findAll() {
     return this.medicalInformationService.findAll();
   }
 
-  @MessagePattern('findOneMedicalInformation')
-  findOne(@Payload() id: number) {
+  @MessagePattern({cmd: 'findOneMedicalInformation'})
+  findOne(id: number) {
     return this.medicalInformationService.findOne(id);
   }
 
-  @MessagePattern('updateMedicalInformation')
-  update(@Payload() updateMedicalInformationDto: UpdateMedicalInformationDto) {
-    return this.medicalInformationService.update(updateMedicalInformationDto.id, updateMedicalInformationDto);
+  @MessagePattern({cmd: 'updateMedicalInformation'})
+  update(data:{id: number, updateMedicalInformationDto: UpdateMedicalInformationDto}) {
+    const {id, updateMedicalInformationDto} = data
+    return this.medicalInformationService.update(id, updateMedicalInformationDto);
   }
 
-  @MessagePattern('removeMedicalInformation')
-  remove(@Payload() id: number) {
-    return this.medicalInformationService.remove(id);
+  @MessagePattern({cmd: 'calculateBMI'})
+  calculateBMI(data:{weight: number, height: number}) {
+    const {weight, height} = data
+    return this.medicalInformationService.calculateBMI(height, weight);
   }
+
 }

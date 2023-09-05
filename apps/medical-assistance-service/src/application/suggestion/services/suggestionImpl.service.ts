@@ -25,11 +25,7 @@ export class SuggestionServiceImpl implements SuggestionService{
           "content": "Hola, ChatGPT. Estoy probando las funcionalidades de tu API, si me comprendes responde con un <<Hola Mundo, soy ChatGPT y me encuentro en SmartBeat>> junto con un corto dato médico aleatorio de la hipertensión"
         }
       ],
-      temperature: 1,
       max_tokens: 4000,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
     });
 
     return response.choices[0].message.content;
@@ -37,8 +33,16 @@ export class SuggestionServiceImpl implements SuggestionService{
 
   
 
-  create(createSuggestionDto: CreateSuggestionDto) {
-    return 'This action adds a new Suggestion';
+  async create(recordId: number, createSuggestionDto: CreateSuggestionDto) {
+    try{
+      const newSuggestion = await this.suggestionRepository.save({
+        ...createSuggestionDto,
+        medicalRecordId: recordId
+      })
+      return new SuggestionResponse('', newSuggestion);
+    }catch(error){
+      return new SuggestionResponse(`An error ocurred when finding suggestion: ` + error.message);
+    }
   }
 
   findAll() {
@@ -48,13 +52,10 @@ export class SuggestionServiceImpl implements SuggestionService{
   async findOne(id: number) {
     try{
       const SuggestionExist =  await this.suggestionRepository.findOne({where: {id: id}});
-
-      if (!SuggestionExist) {
-      return new SuggestionResponse(`Student with id ${id} is not registered`);
-      }
+      if (!SuggestionExist) return new SuggestionResponse(`Suggestion with id ${id} is not registered`);
       return new SuggestionResponse('',SuggestionExist);
     }catch(error){
-      return new SuggestionResponse(`An error ocurred when finding ` + error.message);
+      return new SuggestionResponse(`An error ocurred when finding suggestion: ` + error.message);
     }
   }
 
@@ -68,7 +69,5 @@ export class SuggestionServiceImpl implements SuggestionService{
     return new SuggestionResponse('',resp);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} Suggestion`;
-  }
+ 
 }

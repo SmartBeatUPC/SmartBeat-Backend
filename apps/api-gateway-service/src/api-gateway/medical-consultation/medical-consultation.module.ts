@@ -17,6 +17,26 @@ import { MedicalRecordController } from "./controllers/medical-record.controller
           },
         },
       ]),
+      ClientsModule.register([
+        {
+          name: 'MEDICAL_INFORMATION_SERVICE',
+          transport: Transport.TCP,
+          options: {
+            host: process.env.MEDICAL_INFORMATION_SERVICE_HOSTNAME,
+            port: +process.env.MEDICAL_INFORMATION_SERVICE_PORT,
+          },
+        },
+      ]),
+      ClientsModule.register([
+        {
+          name: 'MEDICAL_ASSISTANCE_SERVICE',
+          transport: Transport.TCP,
+          options: {
+            host: process.env.MEDICAL_ASSISTANCE_SERVICE_HOSTNAME,
+            port: +process.env.MEDICAL_ASSISTANCE_SERVICE_PORT,
+          },
+        },
+      ]),
     ],
     controllers: [
       MedicalConsultationController, 

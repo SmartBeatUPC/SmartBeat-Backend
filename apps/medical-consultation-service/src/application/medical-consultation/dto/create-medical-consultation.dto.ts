@@ -1,17 +1,13 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateMedicalConsultationDto {
 
 
-    @IsString()
+    @IsNumber()
     @IsNotEmpty()
-    medicalDate: Date;
+    doctorId: number; 
 
     @IsNumber()
     @IsNotEmpty()
-    doctor_id: number; 
-
-    @IsNumber()
-    @IsNotEmpty()
-    patient_id: number; 
+    patientId: number; 
 }

@@ -27,19 +27,23 @@ export class RecommendationServiceImpl implements RecommendationService{
           "content": "Hola, ChatGPT. Estoy probando las funcionalidades de tu API, si me comprendes responde con un <<Hola Mundo, soy ChatGPT y me encuentro en SmartBeat>> junto con un corto dato médico aleatorio de la hipertensión"
         }
       ],
-      temperature: 1,
       max_tokens: 4000,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
     });
 
     return response.choices[0].message.content;
   }
   
 
-  create(createRecommendationDto: CreateRecommendationDto) {
-    return 'This action adds a new recommendation';
+  async create(recordId: number, createRecommendationDto: CreateRecommendationDto) {
+    try{
+      const newRecommendation = await this.recommendationRepository.save({
+        ...createRecommendationDto,
+        medicalRecordId: recordId
+      })
+      return new RecommendationResponse('', newRecommendation);
+    }catch(error){
+      return new RecommendationResponse(`An error ocurred when finding Recommendation: ` + error.message);
+    }
   }
 
   findAll() {

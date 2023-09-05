@@ -7,28 +7,29 @@ import { HealthCenterServiceImpl, CreateHealthCenterDto, UpdateHealthCenterDto }
 export class HealthCenterController {
   constructor(private readonly healthCenterService: HealthCenterServiceImpl) {}
 
-  @MessagePattern('createHealthCenter')
-  create(@Payload() createHealthCenterDto: CreateHealthCenterDto) {
+  @MessagePattern({cmd: 'createHealthCenter'})
+  create(createHealthCenterDto: CreateHealthCenterDto) {
     return this.healthCenterService.create(createHealthCenterDto);
   }
 
-  @MessagePattern('findAllHealthCenter')
+  @MessagePattern({cmd: 'findAllHealthCenters'})
   findAll() {
     return this.healthCenterService.findAll();
   }
 
-  @MessagePattern('findOneHealthCenter')
-  findOne(@Payload() id: number) {
+  @MessagePattern({cmd: 'findOneHealthCenter'})
+  findOne(id: number) {
     return this.healthCenterService.findOne(id);
   }
 
-  @MessagePattern('updateHealthCenter')
-  update(@Payload() updateHealthCenterDto: UpdateHealthCenterDto) {
-    return this.healthCenterService.update(updateHealthCenterDto.id, updateHealthCenterDto);
+  @MessagePattern({cmd: 'updateHealthCenter'})
+  update(data: {id: number, updateHealthCenterDto: UpdateHealthCenterDto}) {
+    const {id, updateHealthCenterDto} = data
+    return this.healthCenterService.update(id, updateHealthCenterDto);
   }
 
-  @MessagePattern('removeHealthCenter')
-  remove(@Payload() id: number) {
+  @MessagePattern({cmd: 'removeHealthCenter'})
+  remove(id: number) {
     return this.healthCenterService.remove(id);
   }
 }

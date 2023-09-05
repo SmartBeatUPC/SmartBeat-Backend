@@ -7,28 +7,31 @@ import { CreateSuggestionDto, SuggestionServiceImpl, UpdateSuggestionDto } from 
 export class SuggestionController {
   constructor(private readonly suggestionService: SuggestionServiceImpl) {}
 
-  @MessagePattern('createSuggestion')
-  create(@Payload() createSuggestionDto: CreateSuggestionDto) {
-    return this.suggestionService.create(createSuggestionDto);
+  @MessagePattern({cmd: 'createSuggestion'})
+  create(data: { recordId: number, createSuggestionDto: CreateSuggestionDto}) {
+    const {recordId, createSuggestionDto} = data
+    return this.suggestionService.create(recordId, createSuggestionDto);
   }
 
-  @MessagePattern('findAllSuggestion')
+  @MessagePattern({cmd: 'findAllSuggestions'})
   findAll() {
     return this.suggestionService.findAll();
   }
 
-  @MessagePattern('findOneSuggestion')
+  @MessagePattern({cmd: 'findOneSuggestion'})
   findOne(@Payload() id: number) {
     return this.suggestionService.findOne(id);
   }
 
-  @MessagePattern('updateSuggestion')
-  update(@Payload() updateSuggestionDto: UpdateSuggestionDto) {
-    return this.suggestionService.update(updateSuggestionDto.id, updateSuggestionDto);
+  @MessagePattern({cmd: 'updateSuggestion'})
+  update(data: {id: number, updateSuggestionDto: UpdateSuggestionDto}) {
+    const {id, updateSuggestionDto} = data;
+    return this.suggestionService.update(id, updateSuggestionDto);
   }
 
-  @MessagePattern('removeSuggestion')
-  remove(@Payload() id: number) {
-    return this.suggestionService.remove(id);
+  @MessagePattern({cmd: 'generateGPTSuggestion'})
+  assistanceGPT() {
+    return this.suggestionService.startOpenAI();
   }
+
 }

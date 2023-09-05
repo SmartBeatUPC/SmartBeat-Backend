@@ -1,9 +1,9 @@
 import { CreateMedicalInformationDto, UpdateMedicalInformationDto } from "src/application/index.application";
 
 export interface MedicalInformationService{
-    create(createMedicalInformationDto: CreateMedicalInformationDto);
+    create(recordId: number, createMedicalInformationDto: CreateMedicalInformationDto);
     findAll();
     findOne(id: number);
     update(id: number, updateMedicalInformationDto: UpdateMedicalInformationDto);
-    remove(id: number);
+    calculateBMI(altura: number, peso: number);
 }

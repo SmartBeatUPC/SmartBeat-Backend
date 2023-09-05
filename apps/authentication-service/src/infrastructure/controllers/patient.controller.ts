@@ -7,28 +7,34 @@ import { PatientServiceImpl, CreatePatientDto, UpdatePatientDto } from 'src/appl
 export class PatientController {
   constructor(private readonly patientService: PatientServiceImpl) {}
 
-  @MessagePattern('createPatient')
-  create(@Payload() createPatientDto: CreatePatientDto) {
+  @MessagePattern({cmd: 'createPatient'})
+  create(createPatientDto: CreatePatientDto) {
     return this.patientService.create(createPatientDto);
   }
 
-  @MessagePattern('findAllPatient')
+  @MessagePattern({cmd: 'findAllPatients'})
   findAll() {
     return this.patientService.findAll();
   }
 
-  @MessagePattern('findOnePatient')
-  findOne(@Payload() id: number) {
+  @MessagePattern({cmd: 'findOnePatient'})
+  findOne(id: number) {
     return this.patientService.findOne(id);
   }
 
-  @MessagePattern('updatePatient')
-  update(@Payload() updatePatientDto: UpdatePatientDto) {
-    return this.patientService.update(updatePatientDto.id, updatePatientDto);
+  @MessagePattern({cmd: 'findOnePatientByUserId'})
+  findByUserId(userId: number) {
+    return this.patientService.findByUserId(userId);
   }
 
-  @MessagePattern('removePatient')
-  remove(@Payload() id: number) {
+  @MessagePattern({cmd: 'updatePatient'})
+  update(data: {id: number, updatePatientDto: UpdatePatientDto}) {
+    const {id, updatePatientDto} = data
+    return this.patientService.update(id, updatePatientDto);
+  }
+
+  @MessagePattern({cmd: 'removePatient'})
+  remove(id: number) {
     return this.patientService.remove(id);
   }
 }

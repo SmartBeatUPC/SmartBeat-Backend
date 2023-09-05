@@ -8,7 +8,4 @@ export class CreateSuggestionDto {
     @IsString()
     suggestion: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    medicalRecordId: number;
 }

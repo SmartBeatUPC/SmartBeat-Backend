@@ -1,27 +1,65 @@
 import { Injectable } from '@nestjs/common';
-import { DiagnosticService } from 'src/domain/index.domain';
+import { Diagnostic, DiagnosticService } from 'src/domain/index.domain';
 import { CreateDiagnosticDto } from '../dto/create-diagnostic.dto';
-import { UpdateDiagnosticDto } from '../dto/update-diagnostic.dto';
+import { DiagnosticResponse, UpdateDiagnosticDto } from '../dto/update-diagnostic.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class DiagnosticServiceImpl implements DiagnosticService {
-  create(createDiagnosticDto: CreateDiagnosticDto) {
-    return 'This action adds a new diagnostic';
+
+  constructor(@InjectRepository(Diagnostic) private diagnosticRepository: Repository<Diagnostic>){}
+
+  async create(consultationId: number, createDiagnosticDto: CreateDiagnosticDto) {
+    try{
+      const newDiagnostic = await this.diagnosticRepository.save({
+      medicalConsultationId: consultationId,
+      ...createDiagnosticDto
+      });
+    return new DiagnosticResponse('',newDiagnostic);
+    }catch(error){
+      return new DiagnosticResponse('An error occurred while saving diagnostic: '+error.message);
+    }
   }
 
   findAll() {
-    return `This action returns all diagnostic`;
+    return this.diagnosticRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} diagnostic`;
+  async findOne(id: number) {
+    try{
+      const diagnosticExist = await this.diagnosticRepository.findOneBy({id:id});
+      if(!diagnosticExist) return new DiagnosticResponse(`Diagnostic with id ${id} was not found`);
+      return new DiagnosticResponse('',diagnosticExist);
+    }catch(error){
+      return new DiagnosticResponse('An error occurred while finding diagnostic: '+error.message);
+    }
   }
 
-  update(id: number, updateDiagnosticDto: UpdateDiagnosticDto) {
-    return `This action updates a #${id} diagnostic`;
+  async findByMedicalConsultationId(consultationId: number) {
+    try{
+      const diagnosticExist = await this.diagnosticRepository.findOneBy({medicalConsultationId:consultationId});
+      if(!diagnosticExist) return new DiagnosticResponse(`Diagnostic with Consultation id ${consultationId} was not found`);
+      return new DiagnosticResponse('',diagnosticExist);
+    }catch(error){
+      return new DiagnosticResponse('An error occurred while finding diagnostic: '+error.message);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} diagnostic`;
+  async update(id: number, updateDiagnosticDto: UpdateDiagnosticDto) {
+    try{
+      const diagnosticExist = await this.diagnosticRepository.findOneBy({id:id});
+      if(!diagnosticExist) return new DiagnosticResponse(`Diagnostic with id ${id} was not found`);
+
+      const updatedDiagnostic = await this.diagnosticRepository.save({
+        id: diagnosticExist.id,
+        ...updateDiagnosticDto
+      })
+      return new DiagnosticResponse('',updatedDiagnostic);
+    }catch(error){
+      return new DiagnosticResponse('An error occurred while updating diagnostic: '+error.message);
+    }
   }
+
+ 
 }

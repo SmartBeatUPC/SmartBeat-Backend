@@ -8,28 +8,30 @@ import { CreateMedicalPrescriptionDto, MedicalPrescriptionServiceImpl, UpdateMed
 export class MedicalPrescriptionController {
   constructor(private readonly medicalPrescriptionService: MedicalPrescriptionServiceImpl) {}
 
-  @MessagePattern('createMedicalPrescription')
-  create(@Payload() createMedicalPrescriptionDto: CreateMedicalPrescriptionDto) {
-    return this.medicalPrescriptionService.create(createMedicalPrescriptionDto);
+  @MessagePattern({cmd: 'createMedicalPrescription'})
+  create(data: {diagnosticId: number, createMedicalPrescriptionDto: CreateMedicalPrescriptionDto}) {
+    const {diagnosticId, createMedicalPrescriptionDto} = data
+    return this.medicalPrescriptionService.create(diagnosticId, createMedicalPrescriptionDto);
   }
 
-  @MessagePattern('findAllMedicalPrescription')
+  @MessagePattern({cmd: 'findAllMedicalPrescription'})
   findAll() {
     return this.medicalPrescriptionService.findAll();
   }
 
-  @MessagePattern('findOneMedicalPrescription')
-  findOne(@Payload() id: number) {
+  @MessagePattern({cmd: 'findOneMedicalPrescription'})
+  findOne(id: number) {
     return this.medicalPrescriptionService.findOne(id);
   }
 
-  @MessagePattern('updateMedicalPrescription')
-  update(@Payload() updateMedicalPrescriptionDto: UpdateMedicalPrescriptionDto) {
-    return this.medicalPrescriptionService.update(updateMedicalPrescriptionDto.id, updateMedicalPrescriptionDto);
+  @MessagePattern({cmd: 'findOneMedicalPrescriptionByDiagnosticId'})
+  findByDiagnosticId(diagnosticId: number) {
+    return this.medicalPrescriptionService.findByDiagnosticId(diagnosticId);
   }
 
-  @MessagePattern('removeMedicalPrescription')
-  remove(@Payload() id: number) {
-    return this.medicalPrescriptionService.remove(id);
+  @MessagePattern({cmd: 'updateMedicalPrescription'})
+  update(data: {id, updateMedicalPrescriptionDto: UpdateMedicalPrescriptionDto}) {
+    const {id, updateMedicalPrescriptionDto} = data
+    return this.medicalPrescriptionService.update(id, updateMedicalPrescriptionDto);
   }
 }

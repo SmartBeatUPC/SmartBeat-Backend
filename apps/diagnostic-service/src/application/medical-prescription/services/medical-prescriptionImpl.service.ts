@@ -1,28 +1,64 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMedicalPrescriptionDto } from '../dto/create-medical-prescription.dto';
-import { UpdateMedicalPrescriptionDto } from '../dto/update-medical-prescription.dto';
-import { MedicalPrescriptionService } from 'src/domain/index.domain';
+import { MedicalPrescriptionResponse, UpdateMedicalPrescriptionDto } from '../dto/update-medical-prescription.dto';
+import { MedicalPrescription, MedicalPrescriptionService } from 'src/domain/index.domain';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 
 @Injectable()
 export class MedicalPrescriptionServiceImpl implements MedicalPrescriptionService {
-  create(createMedicalPrescriptionDto: CreateMedicalPrescriptionDto) {
-    return 'This action adds a new medicalPrescription';
+  
+  constructor(@InjectRepository(MedicalPrescription) private medicalPrescriptionRepository: Repository<MedicalPrescription>){}
+
+  async create(diagnosticId: number, createMedicalPrescriptionDto: CreateMedicalPrescriptionDto) {
+    try{
+      const newMedicalPrescription = await this.medicalPrescriptionRepository.save({
+      diagnosticId: diagnosticId,
+      ...createMedicalPrescriptionDto
+      });
+    return new MedicalPrescriptionResponse('',newMedicalPrescription);
+    }catch(error){
+      return new MedicalPrescriptionResponse('An error occurred while saving Medical Prescription: '+error.message);
+    }
   }
 
   findAll() {
-    return `This action returns all medicalPrescription`;
+    return this.medicalPrescriptionRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} medicalPrescription`;
+  async findOne(id: number) {
+    try{
+      const MedicalPrescriptionExist = await this.medicalPrescriptionRepository.findOneBy({id:id});
+      if(!MedicalPrescriptionExist) return new MedicalPrescriptionResponse(`MedicalPrescription with id ${id} was not found`);
+      return new MedicalPrescriptionResponse('',MedicalPrescriptionExist);
+    }catch(error){
+      return new MedicalPrescriptionResponse('An error occurred while finding MedicalPrescription: '+error.message);
+    }
   }
 
-  update(id: number, updateMedicalPrescriptionDto: UpdateMedicalPrescriptionDto) {
-    return `This action updates a #${id} medicalPrescription`;
+  async findByDiagnosticId(diagnosticId: number) {
+    try{
+      const MedicalPrescriptionExist = await this.medicalPrescriptionRepository.findOneBy({diagnosticId: diagnosticId});
+      if(!MedicalPrescriptionExist) return new MedicalPrescriptionResponse(`Medical Prescription with Diagnostic id ${diagnosticId} was not found`);
+      return new MedicalPrescriptionResponse('',MedicalPrescriptionExist);
+    }catch(error){
+      return new MedicalPrescriptionResponse('An error occurred while finding Medical Prescription: '+error.message);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} medicalPrescription`;
+  async update(id: number, updateMedicalPrescriptionDto: UpdateMedicalPrescriptionDto) {
+    try{
+      const MedicalPrescriptionExist = await this.medicalPrescriptionRepository.findOneBy({id:id});
+      if(!MedicalPrescriptionExist) return new MedicalPrescriptionResponse(`Medical Prescription with id ${id} was not found`);
+
+      const updatedMedicalPrescription = await this.medicalPrescriptionRepository.save({
+        id: MedicalPrescriptionExist.id,
+        ...updateMedicalPrescriptionDto
+      })
+      return new MedicalPrescriptionResponse('',updatedMedicalPrescription);
+    }catch(error){
+      return new MedicalPrescriptionResponse('An error occurred while updating Medical Prescription: '+error.message);
+    }
   }
 }

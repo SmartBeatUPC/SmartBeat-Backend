@@ -6,28 +6,31 @@ import { CreateDiagnosticDto, DiagnosticServiceImpl, UpdateDiagnosticDto } from 
 export class DiagnosticController {
   constructor(private readonly diagnosticService: DiagnosticServiceImpl) {}
 
-  @MessagePattern('createDiagnostic')
-  create(@Payload() createDiagnosticDto: CreateDiagnosticDto) {
-    return this.diagnosticService.create(createDiagnosticDto);
+  @MessagePattern({cmd: 'createDiagnostic'})
+  create(data: {consultationId: number, createDiagnosticDto: CreateDiagnosticDto}) {
+    const {consultationId, createDiagnosticDto} = data
+    return this.diagnosticService.create(consultationId, createDiagnosticDto);
   }
 
-  @MessagePattern('findAllDiagnostic')
+  @MessagePattern({cmd: 'findAllDiagnostic'})
   findAll() {
     return this.diagnosticService.findAll();
   }
 
-  @MessagePattern('findOneDiagnosticById')
-  findOne(@Param('id') id: string) {
-    return this.diagnosticService.findOne(+id);
+  @MessagePattern({cmd: 'findOneDiagnosticById'})
+  findOne(id: number) {
+    return this.diagnosticService.findOne(id);
   }
 
-  @MessagePattern('updateDiagnostic')
-  update(@Param('id') id: string, @Body() updateDiagnosticDto: UpdateDiagnosticDto) {
-    return this.diagnosticService.update(+id, updateDiagnosticDto);
+  @MessagePattern({cmd: 'findOneDiagnosticByMedicalConsultationId'})
+  findByMedicalConsultation(consultationId: number) {
+    return this.diagnosticService.findByMedicalConsultationId(consultationId);
   }
 
-  @MessagePattern('deleteDiagnostic')
-  remove(@Param('id') id: string) {
-    return this.diagnosticService.remove(+id);
+  @MessagePattern({cmd: 'updateDiagnostic'})
+  update(data: {id: number, updateDiagnosticDto: UpdateDiagnosticDto}) {
+    const {id,updateDiagnosticDto} = data
+    return this.diagnosticService.update(id, updateDiagnosticDto);
   }
+
 }

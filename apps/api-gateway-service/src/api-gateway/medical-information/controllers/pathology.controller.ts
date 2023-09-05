@@ -1,39 +1,30 @@
-import { Controller, UseFilters, Inject, Post, Body, Get, Param, Patch, Delete } from "@nestjs/common";
+import { Controller, UseFilters, Inject, Post, Body, Get, Param, Patch, Delete, ParseIntPipe } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { ApiTags } from "@nestjs/swagger";
 import { HttpExceptionFilter } from "src/api-gateway/util/http-exception.filter";
 import { RequestPathologyDto } from "../models/pathology.dto";
 
-@ApiTags('Pathologies')
-@Controller('Pathology')
+@ApiTags('pathologies')
+@Controller('pathology')
 @UseFilters(new HttpExceptionFilter())
 export class PathologyController {
   
-    constructor(@Inject('MEDICAL_INFORMATION_SERVICE') private PathologyService: ClientProxy) {}
-
-    @Post()
-    createPathology(@Body() createPathologyDto: RequestPathologyDto) {
-        return this.PathologyService.send({ cmd: 'createPathology' }, createPathologyDto);
-    }
+    constructor(@Inject('MEDICAL_INFORMATION_SERVICE') private medicalInformationService: ClientProxy) {}
   
     @Get()
     findAllPathologys() {
-        return this.PathologyService.send({ cmd: 'findAllPathologys' }, '');
+        return this.medicalInformationService.send({ cmd: 'findAllPathologys' }, '');
     }
   
     @Get(':id')
-    findOnePathology(@Param('id') id: number) {
-        return this.PathologyService.send({ cmd: 'findOnePathology' }, id);
+    findOnePathology(@Param('id', ParseIntPipe) id: number) {
+        return this.medicalInformationService.send({ cmd: 'findOnePathology' }, id);
     }
   
   
     @Patch(':id')
-    updatePathology(@Param('id') id: number, @Body() updatePathologyDto: RequestPathologyDto) {
-        return this.PathologyService.send({ cmd: 'updatePathology' }, {id, updatePathologyDto});
+    updatePathology(@Param('id', ParseIntPipe) id: number, @Body() updatePathologyDto: RequestPathologyDto) {
+        return this.medicalInformationService.send({ cmd: 'updatePathology' }, {id, updatePathologyDto});
     }
   
-    @Delete(':id')
-    removePathology(@Param('id') id: number) {
-        return this.PathologyService.send({ cmd: 'removePathology' }, id);
-    }
 }

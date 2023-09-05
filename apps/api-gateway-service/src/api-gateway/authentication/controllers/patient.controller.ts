@@ -1,39 +1,39 @@
-import { Controller, UseFilters, Inject, Post, Body, Get, Param, Patch, Delete } from "@nestjs/common";
+import { Controller, UseFilters, Inject, Post, Body, Get, Param, Patch, Delete, ParseIntPipe } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { ApiTags } from "@nestjs/swagger";
 import { HttpExceptionFilter } from "src/api-gateway/util/http-exception.filter";
 import { RequestPatientDto } from "../models/patient.dto";
 
-@ApiTags('Patients')
-@Controller('Patient')
+@ApiTags('patients')
+@Controller('patient')
 @UseFilters(new HttpExceptionFilter())
 export class PatientController {
   
-    constructor(@Inject('AUTHENTICATION_SERVICE') private PatientService: ClientProxy) {}
+    constructor(@Inject('AUTHENTICATION_SERVICE') private authenticationService: ClientProxy) {}
 
     @Post()
     createPatient(@Body() createPatientDto: RequestPatientDto) {
-        return this.PatientService.send({ cmd: 'createPatient' }, createPatientDto);
+        return this.authenticationService.send({ cmd: 'createPatient' }, createPatientDto);
     }
   
     @Get()
     findAllPatients() {
-        return this.PatientService.send({ cmd: 'findAllPatients' }, '');
+        return this.authenticationService.send({ cmd: 'findAllPatients' }, '');
     }
   
     @Get(':id')
-    findOnePatient(@Param('id') id: number) {
-        return this.PatientService.send({ cmd: 'findOnePatient' }, id);
+    findOnePatient(@Param('id', ParseIntPipe) id: number) {
+        return this.authenticationService.send({ cmd: 'findOnePatient' }, id);
     }
   
   
     @Patch(':id')
-    updatePatient(@Param('id') id: number, @Body() updatePatientDto: RequestPatientDto) {
-        return this.PatientService.send({ cmd: 'updatePatient' }, {id, updatePatientDto});
+    updatePatient(@Param('id', ParseIntPipe) id: number, @Body() updatePatientDto: RequestPatientDto) {
+        return this.authenticationService.send({ cmd: 'updatePatient' }, {id, updatePatientDto});
     }
   
     @Delete(':id')
-    removePatient(@Param('id') id: number) {
-        return this.PatientService.send({ cmd: 'removePatient' }, id);
+    removePatient(@Param('id', ParseIntPipe) id: number) {
+        return this.authenticationService.send({ cmd: 'removePatient' }, id);
     }
 }

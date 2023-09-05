@@ -6,28 +6,26 @@ import { CreatePathologyDto, PathologyServiceImpl, UpdatePathologyDto } from 'sr
 export class PathologyController {
   constructor(private readonly pathologyService: PathologyServiceImpl) {}
 
-  @MessagePattern('createPathology')
-  create(@Payload() createPathologyDto: CreatePathologyDto) {
-    return this.pathologyService.create(createPathologyDto);
+  @MessagePattern({cmd: 'createPathology'})
+  create(data: {informationId: number, createPathologyDto: CreatePathologyDto}) {
+    const {informationId, createPathologyDto} = data
+    return this.pathologyService.create(informationId ,createPathologyDto);
   }
 
-  @MessagePattern('findAllPathology')
+  @MessagePattern({cmd: 'findAllPathology'})
   findAll() {
     return this.pathologyService.findAll();
   }
 
-  @MessagePattern('findOnePathology')
-  findOne(@Payload() id: number) {
-    return this.pathologyService.findOne(id);
+  @MessagePattern({cmd: 'findPathologyByMedicalInformationId'})
+  findPathologyByMedicalInformationId(informationId: number) {
+    return this.pathologyService.findPathologyByMedicalInformationId(informationId);
   }
 
-  @MessagePattern('updatePathology')
-  update(@Payload() updatePathologyDto: UpdatePathologyDto) {
-    return this.pathologyService.update(updatePathologyDto.id, updatePathologyDto);
+  @MessagePattern({cmd: 'updatePathology'})
+  update(data: {id: number, updatePathologyDto: UpdatePathologyDto}) {
+    const {id, updatePathologyDto} = data
+    return this.pathologyService.update(id, updatePathologyDto);
   }
 
-  @MessagePattern('removePathology')
-  remove(@Payload() id: number) {
-    return this.pathologyService.remove(id);
-  }
 }

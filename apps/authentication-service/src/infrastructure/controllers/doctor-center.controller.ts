@@ -7,28 +7,51 @@ import { DoctorCenterServiceImpl, CreateDoctorCenterDto, UpdateDoctorCenterDto }
 export class DoctorCenterController {
   constructor(private readonly doctorCenterService: DoctorCenterServiceImpl) {}
 
-  @MessagePattern('createDoctorCenter')
-  create(@Payload() createDoctorCenterDto: CreateDoctorCenterDto) {
+  @MessagePattern({cmd: 'createDoctorCenter'})
+  create(createDoctorCenterDto: CreateDoctorCenterDto) {
     return this.doctorCenterService.create(createDoctorCenterDto);
   }
 
-  @MessagePattern('findAllDoctorCenter')
+  @MessagePattern({cmd: 'findAllDoctorCenters'})
   findAll() {
     return this.doctorCenterService.findAll();
   }
 
-  @MessagePattern('findOneDoctorCenter')
-  findOne(@Payload() id: number) {
+  @MessagePattern({cmd: 'findOneDoctorCenter'})
+  findOne(id: number) {
     return this.doctorCenterService.findOne(id);
   }
 
-  @MessagePattern('updateDoctorCenter')
-  update(@Payload() updateDoctorCenterDto: UpdateDoctorCenterDto) {
-    return this.doctorCenterService.update(updateDoctorCenterDto.id, updateDoctorCenterDto);
+  @MessagePattern({cmd: 'findAllDoctorCentersByDoctorId'})
+  findAllByDoctorId(doctorId: number) {
+    return this.doctorCenterService.findAllByDoctorId(doctorId);
   }
 
-  @MessagePattern('removeDoctorCenter')
-  remove(@Payload() id: number) {
+  @MessagePattern({cmd: 'findDoctorCenterByIdAndDoctorId'})
+  findByIdAndDoctorId(data: {doctorId: number, id: number}) {
+    const {doctorId, id} = data
+    return this.doctorCenterService.findByIdAndDoctorId(doctorId, id);
+  }
+
+  @MessagePattern({cmd: 'findDoctorCenterByIdAndHealthCenterId'})
+  findByIdAndHealthCenterId(data: {centerId: number, id: number}) {
+    const {centerId, id} = data
+    return this.doctorCenterService.findByIdAndHealthCenterId(centerId, id);
+  }
+
+  @MessagePattern({cmd: 'findAllDoctorCentersByHealthCenterId'})
+  findAllByHealthCenterId(centerId: number) {
+    return this.doctorCenterService.findAllByHealthCenterId(centerId);
+  }
+
+  @MessagePattern({cmd: 'updateDoctorCenter'})
+  update(data: {id: number, updateDoctorCenterDto: UpdateDoctorCenterDto}) {
+    const {id, updateDoctorCenterDto} = data
+    return this.doctorCenterService.update(id, updateDoctorCenterDto);
+  }
+
+  @MessagePattern({cmd: 'removeDoctorCenter'})
+  remove(id: number) {
     return this.doctorCenterService.remove(id);
   }
 }

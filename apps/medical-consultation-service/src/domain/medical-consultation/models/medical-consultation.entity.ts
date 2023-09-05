@@ -11,11 +11,15 @@ export class MedicalConsultation {
     })
     medicalDate: Date;
 
-    @Column('int')
-    doctor_id: number; 
+    @Column('int',{
+        name: 'doctor_id'
+    })
+    doctorId: number; 
 
-    @Column('int')
-    patient_id: number;
+    @Column('int',{
+        name: 'patient_id'
+    })
+    patientId: number;
     
     @OneToMany(
         () => MedicalRecord,
