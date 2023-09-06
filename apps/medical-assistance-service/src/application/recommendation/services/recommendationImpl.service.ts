@@ -14,23 +14,24 @@ export class RecommendationServiceImpl implements RecommendationService{
   constructor(@InjectRepository(Recommendation) private recommendationRepository: Repository<Recommendation>){}
 
   async startOpenAI(){
-    const openai = new OpenAI({
-      apiKey: process.env.CHATGPT_KEY,
-      organization: process.env.CHATGPT_ORGANIZATION_ID
+    try {
+    const openai = await new OpenAI({
+      apiKey: process.env.CHATGPT_KEY
     });
-
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         {
-          "role": "assistant",
+          "role": "user",
           "content": "Hola, ChatGPT. Estoy probando las funcionalidades de tu API, si me comprendes responde con un <<Hola Mundo, soy ChatGPT y me encuentro en SmartBeat>> junto con un corto dato médico aleatorio de la hipertensión"
         }
       ],
-      max_tokens: 4000,
+      // max_tokens: 4000,
     });
-
-    return response.choices[0].message.content;
+    return response;
+    } catch (error) {
+      return new RecommendationResponse(`An error ocurred when using GPT Recommendation: ` + error.message);
+    }
   }
   
 

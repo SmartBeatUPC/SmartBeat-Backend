@@ -27,7 +27,7 @@ export class RecommendationController {
         return this.medicalAssistanceService.send({ cmd: 'updateRecommendation' }, {id, updateRecommendationDto});
     }
   
-    @Get('/GPT')
+    @Post('/GPT')
     generateGPTRecommendation() {
         return this.medicalAssistanceService.send({ cmd: 'generateGPTRecommendation' }, '');
     }
