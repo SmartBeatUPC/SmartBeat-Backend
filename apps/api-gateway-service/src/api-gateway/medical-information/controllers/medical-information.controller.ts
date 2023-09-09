@@ -2,7 +2,7 @@ import { Controller, UseFilters, Inject, Post, Body, Get, Param, Patch, Delete, 
 import { ClientProxy } from "@nestjs/microservices";
 import { ApiTags } from "@nestjs/swagger";
 import { HttpExceptionFilter } from "src/api-gateway/util/http-exception.filter";
-import { RequestMedicalInformationDto } from "../models/medical-information.dto";
+import { RequestBmiDto, RequestMedicalInformationDto } from "../models/medical-information.dto";
 import { RequestPathologyDto } from "../models/pathology.dto";
 import { RequestPpgDto } from "../models/ppg.dto";
 
@@ -32,6 +32,11 @@ export class MedicalInformationController {
     @Delete(':id')
     removeMedicalInformation(@Param('id', ParseIntPipe) id: number) {
         return this.medicalInformationService.send({ cmd: 'removeMedicalInformation' }, id);
+    }
+
+    @Post('/BMI')
+    calculateBMI(@Body() bmi: RequestBmiDto) {
+        return this.medicalInformationService.send({ cmd: 'calculateBMI' }, bmi);
     }
 
     @Post(':id/pathology')

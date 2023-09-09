@@ -5,6 +5,7 @@ import { Suggestion, SuggestionService } from 'src/domain/index.domain';
 import { InjectRepository } from '@nestjs/typeorm';
 import OpenAI from 'openai';
 import { Repository } from 'typeorm';
+import { promptSuggestion, promptPathology } from 'src/application/prompts';
 
 
 @Injectable()
@@ -30,6 +31,40 @@ export class SuggestionServiceImpl implements SuggestionService{
       } catch (error) {
         return new SuggestionResponse(`An error ocurred when using GPT Suggestion: ` + error.message);
       }
+  }
+
+  async makeGPTSuggestion(methodology: boolean, patientInformation: any, pathologies?: string[]){
+    try{
+      const methodologyChoosed = methodology ? 'Guía: Europea' : 'Guía: Americana';
+      let patientInfoText = '';
+      for (const [key, value] of Object.entries(patientInformation)) {
+        patientInfoText += `, ${key}: ${value}`;
+      }
+      let gptPrompt = promptSuggestion.toString() + methodologyChoosed.toString() + patientInfoText.toString();
+      let pathologiesText = '';
+      if (pathologies && pathologies.length != 0) {
+        for (const pathology of pathologies) {
+          pathologiesText += `, ${pathology}`;
+        }
+        pathologiesText = pathologiesText.slice(2);
+        gptPrompt = gptPrompt  + promptPathology.toString()+pathologiesText.toString();
+      }
+      const openai = await new OpenAI({
+        apiKey: process.env.CHATGPT_KEY
+      });
+      const response = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            "role": "user",
+            "content": gptPrompt
+          }
+        ],
+      });
+      return response;
+    } catch(error){
+      return new SuggestionResponse(`An error ocurred when using GPT Suggestion: ` + error.message);
+    }
   }
 
   

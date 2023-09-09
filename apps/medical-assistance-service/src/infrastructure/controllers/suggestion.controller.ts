@@ -34,4 +34,10 @@ export class SuggestionController {
     return this.suggestionService.startOpenAI();
   }
 
+  @MessagePattern({cmd: 'makeGPTSuggestion'})
+  makeGPTSuggestion(data: {methodology: boolean, medicalInformation: any, pathologies: string[]}) {
+    const {methodology, medicalInformation, pathologies} = data
+    return this.suggestionService.makeGPTSuggestion(methodology, medicalInformation, pathologies);
+  }
+
 }

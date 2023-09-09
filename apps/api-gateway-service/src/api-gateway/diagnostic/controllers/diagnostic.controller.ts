@@ -11,11 +11,6 @@ import { RequestMedicalPrescriptionDto } from "../models/medical-prescription.dt
 export class DiagnosticController {
   
     constructor(@Inject('DIAGNOSTIC_SERVICE') private diagnosticService: ClientProxy) {}
-
-    @Post('/medical-consultation/:consultationId')
-    createDiagnostic(@Param('consultationId', ParseIntPipe)consultationId: number, @Body() createDiagnosticDto: RequestDiagnosticDto) {
-        return this.diagnosticService.send({ cmd: 'createDiagnostic' }, {consultationId,createDiagnosticDto});
-    }
   
     @Get()
     findAllDiagnostics() {

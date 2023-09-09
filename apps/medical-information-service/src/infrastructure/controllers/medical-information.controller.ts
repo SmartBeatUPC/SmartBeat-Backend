@@ -30,8 +30,8 @@ export class MedicalInformationController {
   }
 
   @MessagePattern({cmd: 'calculateBMI'})
-  calculateBMI(data:{weight: number, height: number}) {
-    const {weight, height} = data
+  calculateBMI(data:{height: number, weight: number}) {
+    const { height, weight} = data
     return this.medicalInformationService.calculateBMI(height, weight);
   }
 

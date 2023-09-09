@@ -5,6 +5,14 @@ export class RequestMedicalInformationDto{
 
     @ApiProperty()
     @IsDecimal()
+    height: number;
+
+    @ApiProperty()
+    @IsDecimal()
+    weight: number;
+
+    @ApiProperty()
+    @IsDecimal()
     bmi: number;
 
     @ApiProperty()
@@ -18,4 +26,16 @@ export class RequestMedicalInformationDto{
     @ApiProperty()
     @IsBoolean()
     alcohol: boolean;
+}
+
+export class RequestBmiDto{
+    
+    @ApiProperty()
+    @IsDecimal()
+    height: number;
+
+    @ApiProperty()
+    @IsDecimal()
+    weight: number;
+
 }

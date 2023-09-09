@@ -34,4 +34,12 @@ export class RecommendationController {
   assistanceGPT() {
     return this.recommendationService.startOpenAI();
   }
+
+  @MessagePattern({cmd: 'makeGPTRecommendation'})
+  makeGPTRecommendation(data: {methodology: boolean, medicalInformation: any, pathologies: string[]}) {
+    const {methodology, medicalInformation, pathologies} = data
+    return this.recommendationService.makeGPTRecommendation(methodology, medicalInformation, pathologies);
+  }
+
+  
 }

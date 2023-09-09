@@ -10,6 +10,20 @@ export class MedicalInformation {
         precision: 5,
         scale: 2
     })
+    height: number;
+
+    @Column('decimal',{
+        nullable: true,
+        precision: 5,
+        scale: 2
+    })
+    weight: number;
+
+    @Column('decimal',{
+        nullable: true,
+        precision: 5,
+        scale: 2
+    })
     bmi: number;
 
     @Column('boolean',{

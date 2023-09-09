@@ -4,13 +4,15 @@ import { ApiTags } from "@nestjs/swagger";
 import { HttpExceptionFilter } from "src/api-gateway/util/http-exception.filter";
 import { RequestMedicalConsultationDto } from "../models/medical-consultation.dto";
 import { RequestMedicalRecordDto } from "../models/medical-record.dto";
+import { RequestDiagnosticDto } from "src/api-gateway/diagnostic/models/diagnostic.dto";
 
 @ApiTags('medical consultations')
 @Controller('medical-consultation')
 @UseFilters(new HttpExceptionFilter())
 export class MedicalConsultationController {
   
-    constructor(@Inject('MEDICAL_CONSULTATION_SERVICE') private medicalConsultationService: ClientProxy) {}
+    constructor(@Inject('MEDICAL_CONSULTATION_SERVICE') private medicalConsultationService: ClientProxy,
+    @Inject('DIAGNOSTIC_SERVICE') private diagnosticService: ClientProxy) {}
 
     @Post()
     createMedicalConsultation(@Body() createMedicalConsultationDto: RequestMedicalConsultationDto) {
@@ -38,6 +40,7 @@ export class MedicalConsultationController {
         return this.medicalConsultationService.send({ cmd: 'removeMedicalConsultation' }, id);
     }
 
+    //Medical Record
     @Post(':id/medical-record')
     createMedicalRecord(@Param('id', ParseIntPipe) id: number, @Body() createMedicalRecordDto: RequestMedicalRecordDto) {
         return this.medicalConsultationService.send({ cmd: 'createMedicalRecord' }, {id,createMedicalRecordDto});
@@ -51,5 +54,11 @@ export class MedicalConsultationController {
     @Get(':id/medical-record/:recordId')
     findOneMedicalRecordByIdAndMedicalConsultationId(@Param('id', ParseIntPipe) id: number,@Param('recordId', ParseIntPipe) recordId: number ) {
         return this.medicalConsultationService.send({ cmd: 'findOneMedicalRecordByIdAndMedicalConsultationId' }, {id,recordId});
+    }
+
+    //Diagnostic
+    @Post(':id/diagnostic')
+    createDiagnostic(@Param('id', ParseIntPipe)id: number, @Body() createDiagnosticDto: RequestDiagnosticDto) {
+        return this.diagnosticService.send({ cmd: 'createDiagnostic' }, {id,createDiagnosticDto});
     }
 }

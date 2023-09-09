@@ -13,7 +13,7 @@ export class MedicalInformationServiceImpl implements MedicalInformationService{
   calculateBMI(heightPatient: number, weightPatient: number) {
     try{
       const BMI =  weightPatient/ (heightPatient*heightPatient);
-      return BMI;
+      return BMI.toFixed(1);
     }catch(error){
       return new MedicalInformationResponse('An error occurred while calculate BMI: '+error.message);
     }
