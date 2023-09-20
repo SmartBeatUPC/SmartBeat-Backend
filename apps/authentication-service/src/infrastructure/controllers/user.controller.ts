@@ -28,6 +28,12 @@ export class UserController {
     return this.userService.verifyUser(email, password);
   }
 
+  @MessagePattern({cmd: 'registerUser'})
+  registerUser(data: {createUserDto: any, userIsDoctor: boolean}) {
+    const {createUserDto, userIsDoctor} = data
+    return this.userService.registerUser(createUserDto.requestUserDto, userIsDoctor,createUserDto.requestAditionalDataDto);
+  }
+
   @MessagePattern({cmd: 'updateUser'})
   update(data: {id: number, updateUserDto: UpdateUserDto}) {
     const {id, updateUserDto} = data

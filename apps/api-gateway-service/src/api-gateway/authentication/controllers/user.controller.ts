@@ -2,7 +2,7 @@ import { Controller, UseFilters, Inject, Post, Body, Get, Param, Patch, Delete, 
 import { ClientProxy } from "@nestjs/microservices";
 import { ApiTags } from "@nestjs/swagger";
 import { HttpExceptionFilter } from "src/api-gateway/util/http-exception.filter";
-import { RequestUserDto, RequestVerifyUserDto } from "../models/user.dto";
+import { RequestUserDoctorDto, RequestUserDto, RequestUserPatientDto, RequestVerifyUserDto } from "../models/user.dto";
 
 @ApiTags('users')
 @Controller('user')
@@ -11,9 +11,21 @@ export class UserController {
   
     constructor(@Inject('AUTHENTICATION_SERVICE') private authenticationService: ClientProxy) {}
 
-    @Post()
+    /*@Post()
     createUser(@Body() createUserDto: RequestUserDto) {
-        return this.authenticationService.send({ cmd: 'createUser' }, createUserDto);
+         return this.authenticationService.send({ cmd: 'createUser' }, createUserDto);
+    }*/
+
+    @Post('/doctor')
+    registerUserDoctor(@Body() createUserDto: RequestUserDoctorDto) {
+        let userIsDoctor:boolean = true;
+        return this.authenticationService.send({ cmd: 'registerUser' }, {createUserDto, userIsDoctor});
+    }
+
+    @Post('/patient')
+    registerUserPatient(@Body() createUserDto: RequestUserPatientDto) {
+        let userIsDoctor:boolean = false;
+        return this.authenticationService.send({ cmd: 'registerUser' }, {createUserDto, userIsDoctor});
     }
   
     @Get()
@@ -26,8 +38,8 @@ export class UserController {
         return this.authenticationService.send({ cmd: 'findOneUser' }, id);
     }
   
-    @Post('/verifyUser')
-    verifyUser(@Body() verifyUser: RequestVerifyUserDto) {
+    @Post('/loginSession')
+    loginSession(@Body() verifyUser: RequestVerifyUserDto) {
         return this.authenticationService.send({ cmd: 'verifyUser' }, verifyUser);
     }
   

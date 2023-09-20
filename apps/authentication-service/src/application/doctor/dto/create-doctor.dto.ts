@@ -5,13 +5,13 @@ export class CreateDoctorDto {
     @IsString()
     @IsNotEmpty()
     @MinLength(1)
-    @MaxLength(20)
+    @MaxLength(50)
     name: string;
 
     @IsString()
     @IsNotEmpty()
     @MinLength(1)
-    @MaxLength(15)
+    @MaxLength(50)
     lastName: string;
 
     @IsNumber()
@@ -26,10 +26,15 @@ export class CreateDoctorDto {
 
     @IsString()
     @MinLength(0)
-    @MaxLength(15)
+    @MaxLength(20)
     phone: string;
 
-    @IsNumber()
+    @IsString()
+    @MinLength(0)
+    @MaxLength(20)
+    gender: string;
+
+    /*@IsNumber()
     @IsNotEmpty()
-    userId: number;
+    userId: number;*/
 }

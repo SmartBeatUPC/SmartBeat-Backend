@@ -7,12 +7,12 @@ export class Doctor {
     id: number;
 
     @Column('varchar',{
-        length: 15
+        length: 50
     })
     name: string;
 
     @Column('varchar',{
-        length: 15
+        length: 50
     })
     lastName: string;
 
@@ -20,7 +20,7 @@ export class Doctor {
     age: number;
 
     @Column('varchar',{
-        length: 10
+        length: 20
     })
     gender: string;
 
@@ -30,7 +30,7 @@ export class Doctor {
     dni: string;
 
     @Column('varchar',{
-        length: 15,
+        length: 20,
         nullable: true,
     })
     phone: string;

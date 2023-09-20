@@ -11,10 +11,10 @@ export class PatientController {
   
     constructor(@Inject('AUTHENTICATION_SERVICE') private authenticationService: ClientProxy) {}
 
-    @Post()
+    /*@Post()
     createPatient(@Body() createPatientDto: RequestPatientDto) {
         return this.authenticationService.send({ cmd: 'createPatient' }, createPatientDto);
-    }
+    }*/
   
     @Get()
     findAllPatients() {

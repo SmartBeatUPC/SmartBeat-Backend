@@ -13,8 +13,8 @@ export class PatientServiceImpl implements PatientService {
 
   async create(createPatientDto: CreatePatientDto) {
     try{
-      const userExist = await this.userRepository.findOne({where: {id: createPatientDto.userId, isDoctor: false}});
-      if(!userExist) return new PatientResponse(`User with id ${createPatientDto.userId} was not found`);
+      // const userExist = await this.userRepository.findOne({where: {id: createPatientDto.userId, isDoctor: false}});
+      // if(!userExist) return new PatientResponse(`User with id ${createPatientDto.userId} was not found`);
       const newPatient = await this.patientRepository.save({
         ...createPatientDto
       })

@@ -4,13 +4,13 @@ export class CreatePatientDto {
     @IsString()
     @IsNotEmpty()
     @MinLength(1)
-    @MaxLength(20)
+    @MaxLength(50)
     name: string;
 
     @IsString()
     @IsNotEmpty()
     @MinLength(1)
-    @MaxLength(15)
+    @MaxLength(50)
     lastName: string;
 
     @IsNumber()
@@ -25,7 +25,7 @@ export class CreatePatientDto {
     
     @IsString()
     @MinLength(0)
-    @MaxLength(15)
+    @MaxLength(20)
     phone: string;
 
     @IsString()
@@ -33,7 +33,12 @@ export class CreatePatientDto {
     @MaxLength(30)
     nationality: string;
 
-    @IsNumber()
+    @IsString()
+    @MinLength(0)
+    @MaxLength(20)
+    gender: string;
+
+    /*@IsNumber()
     @IsNotEmpty()
-    userId: number;
+    userId: number;*/
 }

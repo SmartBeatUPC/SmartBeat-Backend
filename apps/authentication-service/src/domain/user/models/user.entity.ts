@@ -13,7 +13,7 @@ export class User {
     email: string;
 
     @Column('varchar',{
-        length: 200
+        length: 500
     })
     password: string;
 

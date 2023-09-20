@@ -7,14 +7,14 @@ export class RequestPatientDto{
     @IsString()
     @IsNotEmpty()
     @MinLength(1)
-    @MaxLength(20)
+    @MaxLength(50)
     name: string;
 
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
     @MinLength(1)
-    @MaxLength(15)
+    @MaxLength(50)
     lastName: string;
 
     @ApiProperty()
@@ -32,8 +32,14 @@ export class RequestPatientDto{
     @ApiProperty()
     @IsString()
     @MinLength(0)
-    @MaxLength(15)
+    @MaxLength(20)
     phone: string;
+
+    @ApiProperty()
+    @IsString()
+    @MinLength(0)
+    @MaxLength(20)
+    gender: string;
 
     @ApiProperty()
     @IsString()
@@ -41,8 +47,8 @@ export class RequestPatientDto{
     @MaxLength(30)
     nationality: string;
 
-    @ApiProperty()
+    /*@ApiProperty()
     @IsNumber()
     @IsNotEmpty()
-    userId: number;
+    userId: number;*/
 }
