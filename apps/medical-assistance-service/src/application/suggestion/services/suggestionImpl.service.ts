@@ -33,14 +33,14 @@ export class SuggestionServiceImpl implements SuggestionService{
       }
   }
 
-  async makeGPTSuggestion(methodology: boolean, patientInformation: any, pathologies?: string[]){
+  async makeGPTSuggestion(methodology: boolean, age: number, gender: string, patientInformation: any, pathologies?: string[]){
     try{
       const methodologyChoosed = methodology ? 'Guía: Europea' : 'Guía: Americana';
       let patientInfoText = '';
       for (const [key, value] of Object.entries(patientInformation)) {
         patientInfoText += `, ${key}: ${value}`;
       }
-      let gptPrompt = promptSuggestion.toString() + methodologyChoosed.toString() + patientInfoText.toString();
+      let gptPrompt = promptSuggestion.toString() + methodologyChoosed.toString() + ', Edad: '+ age +', Genero: ' + gender + patientInfoText.toString();
       let pathologiesText = '';
       if (pathologies && pathologies.length != 0) {
         for (const pathology of pathologies) {
@@ -61,7 +61,10 @@ export class SuggestionServiceImpl implements SuggestionService{
           }
         ],
       });
-      return response;
+
+      let responseAssistance = response.choices[0].message.content;
+      let totalTokens = response.usage.total_tokens;
+      return {responseAssistance, totalTokens};
     } catch(error){
       return new SuggestionResponse(`An error ocurred when using GPT Suggestion: ` + error.message);
     }

@@ -44,4 +44,5 @@ export class MedicalRecordController {
     createMedicalInformation(@Param('id', ParseIntPipe) id: number, @Body() createMedicalInformationDto: RequestMedicalInformationDto) {
         return this.medicalInformationService.send({ cmd: 'createMedicalInformation' },{id, createMedicalInformationDto});
     }
+    
 }

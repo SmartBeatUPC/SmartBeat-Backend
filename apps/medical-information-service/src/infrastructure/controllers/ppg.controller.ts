@@ -8,15 +8,21 @@ export class PpgController {
   constructor(private readonly ppgService: PpgServiceImpl) {}
 
   @MessagePattern({cmd: 'createPpg'})
-  create(data:{informationId: number,createPpgDto: CreatePpgDto}) {
-    const {informationId, createPpgDto} = data
-    return this.ppgService.create(informationId, createPpgDto);
+  create(data:{id: number,createPpgDto: CreatePpgDto}) {
+    const {id, createPpgDto} = data
+    return this.ppgService.create(id, createPpgDto);
   }
 
   @MessagePattern({cmd: 'findPPGByInformationId'})
   findPPGByInformationId(informationId: number) {
     return this.ppgService.findPPGByInformationId(informationId);
   }
+
+  @MessagePattern({cmd: 'findAllPPGByMedicalConsultationId'})
+  findAllPPGByMedicalConsultationId(id: number) {
+    return this.ppgService.findAllPPGByConsultationId(id);
+  }
+
 
   @MessagePattern({cmd: 'updatePpg'})
   update(data: {id: number, updatePpgDto: UpdatePpgDto}) {

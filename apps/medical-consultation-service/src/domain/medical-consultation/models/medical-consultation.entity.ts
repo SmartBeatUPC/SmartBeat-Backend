@@ -6,11 +6,6 @@ export class MedicalConsultation {
     @PrimaryGeneratedColumn('increment')
     id:number;
 
-    @Column('timestamp',{
-        name: 'medical_date'
-    })
-    medicalDate: Date;
-
     @Column('int',{
         name: 'doctor_id'
     })

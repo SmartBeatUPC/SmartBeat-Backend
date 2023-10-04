@@ -18,7 +18,7 @@ export class MedicalConsultationController {
     return this.medicalConsultationService.createMedicalRecordByMedicalConsultationId(consultationId, createMedicalRecordDto);
   }
 
-  @MessagePattern({cmd: 'findAllMedicalConsultation'})
+  @MessagePattern({cmd: 'findAllMedicalConsultations'})
   findAll() {
     return this.medicalConsultationService.findAll();
   }

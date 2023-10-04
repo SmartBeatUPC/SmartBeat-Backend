@@ -7,12 +7,12 @@ export class PathologyController {
   constructor(private readonly pathologyService: PathologyServiceImpl) {}
 
   @MessagePattern({cmd: 'createPathology'})
-  create(data: {informationId: number, createPathologyDto: CreatePathologyDto}) {
-    const {informationId, createPathologyDto} = data
-    return this.pathologyService.create(informationId ,createPathologyDto);
+  create(data: {id: number, createPathologyDto: CreatePathologyDto}) {
+    const {id, createPathologyDto} = data
+    return this.pathologyService.create(id ,createPathologyDto);
   }
 
-  @MessagePattern({cmd: 'findAllPathology'})
+  @MessagePattern({cmd: 'findAllPathologies'})
   findAll() {
     return this.pathologyService.findAll();
   }

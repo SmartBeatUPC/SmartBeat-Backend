@@ -33,7 +33,9 @@ export class MedicalRecordServiceImpl implements MedicalRecordService{
   }
 
   async findByIdAndMedicalConsultationId(consultationId: number, id: number){
-    try{const medical_consultation = await this.medicalConsultationRepository.findOneBy({ id: consultationId });
+    try{
+      
+      const medical_consultation = await this.medicalConsultationRepository.findOneBy({ id: consultationId });
     if (!medical_consultation) return new MedicalRecordResponse(`A Medical Consultation with id ${consultationId} was not found`);
 
     const medicalRecordExist = await this.medicalRecordRepository.findOne({
@@ -45,8 +47,8 @@ export class MedicalRecordServiceImpl implements MedicalRecordService{
         },
         relations: ['medical_consultation']
     });
-
-    if(!medicalRecordExist) return new MedicalRecordResponse(`Medical Record with Medical Consultation Id ${consultationId} was not found`)
+    
+    if(!medicalRecordExist) return new MedicalRecordResponse(`Medical Record with id ${id} and Medical Consultation Id ${consultationId} was not found`)
 
     return new MedicalRecordResponse('',medicalRecordExist);
     }catch(error){
@@ -67,7 +69,7 @@ export class MedicalRecordServiceImpl implements MedicalRecordService{
           },
           relations: ['medical_consultation']
       });
-
+      if(!MedicalRecords || MedicalRecords.length == 0) return new MedicalRecordResponse(`No Medical Records found with the inserted Medical Consultation Id ${consultationId}`);
       return MedicalRecords;
     }catch(error){
     return new MedicalRecordResponse(`An error ocurred when finding medical-record: ` + error.message);

@@ -12,7 +12,8 @@ export class Suggestion {
     suggestion: string;
 
     @Column('varchar',{
-        length: 400
+        length: 400,
+        nullable: true
     })
     alternative: string;
 

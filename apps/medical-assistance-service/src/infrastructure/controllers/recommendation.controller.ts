@@ -36,9 +36,9 @@ export class RecommendationController {
   }
 
   @MessagePattern({cmd: 'makeGPTRecommendation'})
-  makeGPTRecommendation(data: {methodology: boolean, medicalInformation: any, pathologies: string[]}) {
-    const {methodology, medicalInformation, pathologies} = data
-    return this.recommendationService.makeGPTRecommendation(methodology, medicalInformation, pathologies);
+  makeGPTRecommendation(data: {methodology: boolean, age: number, gender: string, medicalInformation: any, pathologies: string[]}) {
+    const {methodology, age, gender, medicalInformation, pathologies} = data
+    return this.recommendationService.makeGPTRecommendation(methodology, age, gender, medicalInformation, pathologies);
   }
 
   

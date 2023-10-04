@@ -16,9 +16,7 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
   async create(createMedicalConsultationDto: CreateMedicalConsultationDto) {
     try{
       const newMedicalConsultation = await this.medicalConsultationRepository.save({
-      doctorId: createMedicalConsultationDto.doctorId,
-      patientId: createMedicalConsultationDto.patientId,
-      medicalDate: new Date()
+      ...createMedicalConsultationDto
       });
     return new MedicalConsultationResponse('',newMedicalConsultation);
     }catch(error){
@@ -26,11 +24,14 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
     }
   }
 
-  async createMedicalRecordByMedicalConsultationId(consultationId: number, createMedicalRecord: CreateMedicalRecordDto): 
-  Promise<MedicalRecordResponse> {
+  async createMedicalRecordByMedicalConsultationId(consultationId: number, createMedicalRecord: CreateMedicalRecordDto){
     try {
         const consultationExist = await this.medicalConsultationRepository.findOneBy({ id: consultationId });
         if (!consultationExist) return new MedicalConsultationResponse(`Medical Consultation with id ${consultationId} was not found`);
+
+        if(!createMedicalRecord.recordDate) {
+          createMedicalRecord.recordDate = new Date()
+        } 
 
         const recordPreload = await this.medicalRecordRepository.create(createMedicalRecord);
         recordPreload.medical_consultation = consultationExist;

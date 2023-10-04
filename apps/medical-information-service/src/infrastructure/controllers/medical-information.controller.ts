@@ -7,13 +7,19 @@ import { MedicalInformationServiceImpl, CreateMedicalInformationDto, UpdateMedic
 export class MedicalInformationController {
   constructor(private readonly medicalInformationService: MedicalInformationServiceImpl) {}
 
-  @MessagePattern({cmd: 'createMedicalInformation'})
-  create(data:{ recordId: number, createMedicalInformationDto: CreateMedicalInformationDto}) {
-    const {recordId, createMedicalInformationDto} = data
-    return this.medicalInformationService.create(recordId, createMedicalInformationDto);
+  @MessagePattern({cmd: 'createMedicalRecordAndMedicalInformation'})
+  createMedicalRecordAndMedicalInformation(data:{ consultationId: number, requestMedicalRecordAndInformation: any}) {
+    const {consultationId, requestMedicalRecordAndInformation} = data
+    return this.medicalInformationService.createMedicalRecordAndMedicalInformation(consultationId, requestMedicalRecordAndInformation.requestMedicalRecordDto, requestMedicalRecordAndInformation.requestMedicalInformationDto);
   }
 
-  @MessagePattern({cmd: 'findAllMedicalInformation'})
+  @MessagePattern({cmd: 'createMedicalInformation'})
+  create(data:{ id: number,createMedicalInformationDto: CreateMedicalInformationDto}) {
+    const {id ,createMedicalInformationDto} = data
+    return this.medicalInformationService.create(id, createMedicalInformationDto);
+  }
+
+  @MessagePattern({cmd: 'findAllMedicalInformations'})
   findAll() {
     return this.medicalInformationService.findAll();
   }

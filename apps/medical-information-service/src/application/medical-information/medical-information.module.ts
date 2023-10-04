@@ -3,10 +3,14 @@ import { MedicalInformationServiceImpl } from './services/medical-informationImp
 import { MedicalInformation, Pathology, Ppg } from 'src/domain/index.domain';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MedicalInformationController } from 'src/infrastructure/index.controller';
+import { MedicalRecordClient } from 'src/shared/medical-record/medical-record.client';
 
 @Module({
   controllers: [MedicalInformationController],
-  providers: [MedicalInformationServiceImpl],
+  providers: [
+    MedicalInformationServiceImpl,
+    MedicalRecordClient
+  ],
   imports: [
     TypeOrmModule.forFeature([MedicalInformation]),
     TypeOrmModule.forFeature([Pathology]),

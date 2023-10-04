@@ -6,6 +6,11 @@ export class MedicalRecord {
     @PrimaryGeneratedColumn('increment')
     id:number;
 
+    @Column('timestamp',{
+        name: 'record_date',
+        nullable: true
+    })
+    recordDate: Date;
 
     @ManyToOne(
         () => MedicalConsultation,

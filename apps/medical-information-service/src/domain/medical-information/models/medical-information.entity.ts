@@ -43,7 +43,8 @@ export class MedicalInformation {
 
     @Column('int',{
         nullable: false,
+        name: 'medical_record_id'
     })
-    medical_record_id: number;
+    medicalRecordId: number;
 
 }
