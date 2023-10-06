@@ -8,9 +8,9 @@ export class MedicalInformationController {
   constructor(private readonly medicalInformationService: MedicalInformationServiceImpl) {}
 
   @MessagePattern({cmd: 'createMedicalRecordAndMedicalInformation'})
-  createMedicalRecordAndMedicalInformation(data:{ consultationId: number, requestMedicalRecordAndInformation: any}) {
-    const {consultationId, requestMedicalRecordAndInformation} = data
-    return this.medicalInformationService.createMedicalRecordAndMedicalInformation(consultationId, requestMedicalRecordAndInformation.requestMedicalRecordDto, requestMedicalRecordAndInformation.requestMedicalInformationDto);
+  createMedicalRecordAndMedicalInformation(data:{ id: number, requestMedicalRecordAndInformation: any}) {
+    const {id, requestMedicalRecordAndInformation} = data
+    return this.medicalInformationService.createMedicalRecordAndMedicalInformation(id, requestMedicalRecordAndInformation.requestMedicalRecordDto, requestMedicalRecordAndInformation.requestMedicalInformationDto);
   }
 
   @MessagePattern({cmd: 'createMedicalInformation'})

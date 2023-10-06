@@ -14,8 +14,8 @@ export class PpgController {
   }
 
   @MessagePattern({cmd: 'findPPGByInformationId'})
-  findPPGByInformationId(informationId: number) {
-    return this.ppgService.findPPGByInformationId(informationId);
+  findPPGByInformationId(id: number) {
+    return this.ppgService.findPPGByInformationId(id);
   }
 
   @MessagePattern({cmd: 'findAllPPGByMedicalConsultationId'})

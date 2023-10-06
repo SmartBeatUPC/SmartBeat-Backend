@@ -8,9 +8,9 @@ export class SuggestionController {
   constructor(private readonly suggestionService: SuggestionServiceImpl) {}
 
   @MessagePattern({cmd: 'createSuggestion'})
-  create(data: { recordId: number, createSuggestionDto: CreateSuggestionDto}) {
-    const {recordId, createSuggestionDto} = data
-    return this.suggestionService.create(recordId, createSuggestionDto);
+  create(data: { id: number, createSuggestionDto: CreateSuggestionDto}) {
+    const {id, createSuggestionDto} = data
+    return this.suggestionService.create(id, createSuggestionDto);
   }
 
   @MessagePattern({cmd: 'findAllSuggestions'})

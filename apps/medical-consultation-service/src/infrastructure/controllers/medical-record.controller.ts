@@ -24,7 +24,7 @@ export class MedicalRecordController {
   }
 
   @MessagePattern({cmd:'findAllMedicalRecordsByMedicalConsultationId'})
-  findAllMedicalRecordsByMedicalConsultationId(consultationId: number) {
-    return this.medicalRecordService.findAllMedicalRecordsByMedicalConsultationId(consultationId);
+  findAllMedicalRecordsByMedicalConsultationId(id: number) {
+    return this.medicalRecordService.findAllMedicalRecordsByMedicalConsultationId(id);
   }
 }

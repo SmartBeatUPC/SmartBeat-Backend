@@ -13,9 +13,9 @@ export class MedicalConsultationController {
   }
 
   @MessagePattern({cmd: 'createMedicalRecord'})
-  createMedicalRecord(data: {consultationId: number, createMedicalRecordDto: CreateMedicalRecordDto}) {
-    const {consultationId, createMedicalRecordDto} = data
-    return this.medicalConsultationService.createMedicalRecordByMedicalConsultationId(consultationId, createMedicalRecordDto);
+  createMedicalRecord(data: {id: number, createMedicalRecordDto: CreateMedicalRecordDto}) {
+    const {id, createMedicalRecordDto} = data
+    return this.medicalConsultationService.createMedicalRecordByMedicalConsultationId(id, createMedicalRecordDto);
   }
 
   @MessagePattern({cmd: 'findAllMedicalConsultations'})

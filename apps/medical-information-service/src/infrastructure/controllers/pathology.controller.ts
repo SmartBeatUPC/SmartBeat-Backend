@@ -18,8 +18,8 @@ export class PathologyController {
   }
 
   @MessagePattern({cmd: 'findPathologyByMedicalInformationId'})
-  findPathologyByMedicalInformationId(informationId: number) {
-    return this.pathologyService.findPathologyByMedicalInformationId(informationId);
+  findPathologyByMedicalInformationId(id: number) {
+    return this.pathologyService.findPathologyByMedicalInformationId(id);
   }
 
   @MessagePattern({cmd: 'updatePathology'})
