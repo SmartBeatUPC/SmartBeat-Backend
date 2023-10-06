@@ -6,8 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMedicalRecordDto } from 'src/application/index.application';
 import { MedicalRecordResponse } from 'src/application/medical-record/dto/update-medical-record.dto';
-import { PatientClient } from 'shared/patient/patient.client';
-import { DoctorClient } from 'shared/doctor/doctor.client';
+import { PatientClient } from 'src/shared/patient/patient.client';
+import { DoctorClient } from 'src/shared/doctor/doctor.client';
 import { format } from 'date-fns';
 
 @Injectable()

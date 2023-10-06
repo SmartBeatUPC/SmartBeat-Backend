@@ -3,8 +3,8 @@ import { MedicalConsultationServiceImpl } from '../index.application';
 import { MedicalConsultationController } from 'src/infrastructure/index.controller';
 import { MedicalConsultation, MedicalRecord } from 'src/domain/index.domain';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PatientClient } from 'shared/patient/patient.client';
-import { DoctorClient } from 'shared/doctor/doctor.client';
+import { PatientClient } from 'src/shared/patient/patient.client';
+import { DoctorClient } from 'src/shared/doctor/doctor.client';
 
 
 @Module({
