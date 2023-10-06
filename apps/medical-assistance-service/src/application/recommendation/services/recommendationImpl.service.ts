@@ -35,10 +35,13 @@ export class RecommendationServiceImpl implements RecommendationService{
     }
   }
 
-  async makeGPTRecommendation(methodology: boolean, age: number, gender: string, patientInformation: any, pathologies?: string[]){
+  async makeGPTRecommendation(methodology: boolean, age: number, gender: string, patientPpg: any ,patientInformation: any, pathologies?: string[]){
     try{
       const methodologyChoosed = methodology ? 'Guía: Europea' : 'Guía: Americana';
       let patientInfoText = '';
+      for(const [key, value] of Object.entries(patientPpg)) {
+        patientInfoText += `, ${key}: ${value}`;
+      }
       for (const [key, value] of Object.entries(patientInformation)) {
         patientInfoText += `, ${key}: ${value}`;
       }

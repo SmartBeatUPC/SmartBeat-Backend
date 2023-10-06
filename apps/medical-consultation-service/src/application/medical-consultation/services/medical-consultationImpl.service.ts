@@ -60,6 +60,50 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
     }
   }
 
+  async findAllByPatientId(patientId: number){
+    try{
+      const medicalConsultations=  await this.medicalConsultationRepository.find({where: {patientId: patientId}});
+
+      if (!medicalConsultations || medicalConsultations.length == 0) return new MedicalConsultationResponse(`Medical Consultations with Patient Id ${patientId} are not registered`);
+      return medicalConsultations;
+    }catch(error){
+      return new MedicalConsultationResponse(`An error ocurred when finding ` + error.message);
+    }
+  }
+
+  async findAllByDoctorId(doctorId: number){
+    try{
+      const medicalConsultations=  await this.medicalConsultationRepository.find({where: {doctorId: doctorId}});
+
+      if (!medicalConsultations || medicalConsultations.length == 0) return new MedicalConsultationResponse(`Medical Consultations with Doctor Id ${doctorId} are not registered`);
+      return medicalConsultations;
+    }catch(error){
+      return new MedicalConsultationResponse(`An error ocurred when finding ` + error.message);
+    }
+  }
+
+  async findOneByIdAndPatientId(patientId: number, id: number){
+    try{
+      const medicalConsultationExist=  await this.medicalConsultationRepository.findOneBy({id: id, patientId: patientId});
+
+      if (!medicalConsultationExist) return new MedicalConsultationResponse(`Medical Consultation with Id ${id} and Patient Id ${patientId} is not registered`);
+      return new MedicalConsultationResponse('',medicalConsultationExist);
+    }catch(error){
+      return new MedicalConsultationResponse(`An error ocurred when finding ` + error.message);
+    }
+  }
+
+  async findOneByIdAndDoctorId(doctorId: number, id: number){
+    try{
+      const medicalConsultationExist=  await this.medicalConsultationRepository.findOneBy({id: id, doctorId: doctorId});
+
+      if (!medicalConsultationExist) return new MedicalConsultationResponse(`Medical Consultation with Id ${id} and Doctor Id ${doctorId} is not registered`);
+      return new MedicalConsultationResponse('',medicalConsultationExist);
+    }catch(error){
+      return new MedicalConsultationResponse(`An error ocurred when finding ` + error.message);
+    }
+  }
+
   async update(id: number, updateMedicalConsultationDto: UpdateMedicalConsultationDto) {
     try{
       const medicalConsultationExist =  await this.medicalConsultationRepository.findOne({where: {id: id}});

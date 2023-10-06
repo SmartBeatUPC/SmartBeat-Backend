@@ -21,6 +21,16 @@ import { PatientController } from "./controllers/patient.controller";
           },
         },
       ]),
+      ClientsModule.register([
+        {
+          name: 'MEDICAL_CONSULTATION_SERVICE',
+          transport: Transport.TCP,
+          options: {
+            host: process.env.MEDICAL_CONSULTATION_SERVICE_HOSTNAME,
+            port: +process.env.MEDICAL_CONSULTATION_SERVICE_PORT,
+          },
+        },
+      ]),
     ],
     controllers: [
       UserController,

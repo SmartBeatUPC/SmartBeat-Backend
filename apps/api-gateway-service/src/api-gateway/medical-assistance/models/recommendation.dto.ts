@@ -2,6 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsDecimal, IsNumber, IsString, MaxLength, MinLength } from "class-validator";
 import { RequestMedicalInformationDto } from "src/api-gateway/medical-information/models/medical-information.dto";
 import { RequestPathologyDto } from "src/api-gateway/medical-information/models/pathology.dto";
+import { RequestPpgDto } from "src/api-gateway/medical-information/models/ppg.dto";
 
 export class RequestRecommendationDto{
 
@@ -25,6 +26,9 @@ export class RequestGPTDto{
     @ApiProperty()
     @IsString()
     gender: string;
+
+    @ApiProperty()
+    ppg: RequestPpgDto;
 
     @ApiProperty()
     medicalInformation: RequestMedicalInformationDto;

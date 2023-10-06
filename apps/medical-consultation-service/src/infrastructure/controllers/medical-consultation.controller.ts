@@ -23,6 +23,28 @@ export class MedicalConsultationController {
     return this.medicalConsultationService.findAll();
   }
 
+  @MessagePattern({cmd: 'findAllMedicalConsultationsByPatientId'})
+  findAllMedicalConsultationsByPatientId(id: number) {
+    return this.medicalConsultationService.findAllByPatientId(id);
+  }
+
+  @MessagePattern({cmd: 'findAllMedicalConsultationsByDoctorId'})
+  findAllMedicalConsultationsByDoctorId(id: number) {
+    return this.medicalConsultationService.findAllByDoctorId(id);
+  }
+
+  @MessagePattern({cmd: 'findOneMedicalConsultationByIdAndPatientId'})
+  findOneMedicalConsultationByIdAndPatientId(data: {id, medicalConsultationId}) {
+    const {id, medicalConsultationId} = data
+    return this.medicalConsultationService.findOneByIdAndPatientId(id, medicalConsultationId);
+  }
+
+  @MessagePattern({cmd: 'findOneMedicalConsultationByIdAndDoctorId'})
+  findOneMedicalConsultationByIdAndDoctorId(data: {id, medicalConsultationId}) {
+    const {id, medicalConsultationId} = data
+    return this.medicalConsultationService.findOneByIdAndDoctorId(id, medicalConsultationId);
+  }
+
   @MessagePattern({cmd: 'findOneMedicalConsultation'})
   findOne(@Payload() id: number) {
     return this.medicalConsultationService.findOne(id);

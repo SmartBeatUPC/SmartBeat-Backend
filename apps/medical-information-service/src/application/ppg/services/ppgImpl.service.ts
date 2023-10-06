@@ -5,6 +5,7 @@ import { MedicalInformation, Ppg, PpgService } from 'src/domain/index.domain';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MedicalRecordClient } from 'src/shared/medical-record/medical-record.client';
+import { format } from 'date-fns';
 
 @Injectable()
 export class PpgServiceImpl implements PpgService{
@@ -56,9 +57,12 @@ export class PpgServiceImpl implements PpgService{
       let medicalInformationExist = await this.medicalInformationRepository.findOneBy({medicalRecordId: medicalRecordsResponse[i].id})
       if(medicalInformationExist){
         let ppg = await this.ppgRepository.findOneBy({medicalInformationId: medicalInformationExist.id});
+        let ppgDateChanged = format(new Date(ppg.ppgDate), 'dd/MM/yyyy HH:mm');
         let medicalRecordId = medicalInformationExist.medicalRecordId;
-        if(ppg) ppgList.push({ ppg, medicalRecordId});
-        console.log("Interacción " + i)
+        if(ppg) ppgList.push({ ppg: {
+          ...ppg,
+          ppgDate: ppgDateChanged,
+        }, medicalRecordId});
       }
     }
     if(!ppgList || ppgList.length == 0) return new PpgResponse(`PPGs were not recorded in this Medical Consultation Id ${consultationId}.`);

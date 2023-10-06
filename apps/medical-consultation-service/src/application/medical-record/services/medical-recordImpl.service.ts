@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MedicalConsultationResponse } from 'src/application/medical-consultation/dto/update-medical-consultation.dto';
 import { Repository } from 'typeorm';
 import { plainToInstance } from "class-transformer";
+import { format } from 'date-fns';
 
 
 @Injectable()
@@ -70,7 +71,12 @@ export class MedicalRecordServiceImpl implements MedicalRecordService{
           relations: ['medical_consultation']
       });
       if(!MedicalRecords || MedicalRecords.length == 0) return new MedicalRecordResponse(`No Medical Records found with the inserted Medical Consultation Id ${consultationId}`);
-      return MedicalRecords;
+      const formattedMedicalRecords = MedicalRecords.map((record) => ({
+        ...record,
+        recordDate: format(new Date(record.recordDate), 'dd/MM/yyyy HH:mm'),
+      }));
+  
+      return formattedMedicalRecords;
     }catch(error){
     return new MedicalRecordResponse(`An error ocurred when finding medical-record: ` + error.message);
     }

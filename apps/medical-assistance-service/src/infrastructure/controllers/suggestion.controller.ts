@@ -35,9 +35,9 @@ export class SuggestionController {
   }
 
   @MessagePattern({cmd: 'makeGPTSuggestion'})
-  makeGPTSuggestion(data: {methodology: boolean, age: number, gender: string, medicalInformation: any, pathologies: string[]}) {
-    const {methodology, age, gender,medicalInformation, pathologies} = data
-    return this.suggestionService.makeGPTSuggestion(methodology, age, gender, medicalInformation, pathologies);
+  makeGPTSuggestion(data: {methodology: boolean, age: number, gender: string, ppg: any, medicalInformation: any, pathologies: string[]}) {
+    const {methodology, age, gender, ppg,medicalInformation, pathologies} = data
+    return this.suggestionService.makeGPTSuggestion(methodology, age, gender, ppg, medicalInformation, pathologies);
   }
 
 }
