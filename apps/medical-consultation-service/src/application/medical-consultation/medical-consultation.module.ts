@@ -3,11 +3,15 @@ import { MedicalConsultationServiceImpl } from '../index.application';
 import { MedicalConsultationController } from 'src/infrastructure/index.controller';
 import { MedicalConsultation, MedicalRecord } from 'src/domain/index.domain';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PatientClient } from 'shared/medical-record/patient.client';
+import { DoctorClient } from 'shared/doctor/doctor.client';
 
 
 @Module({
   controllers: [MedicalConsultationController],
-  providers: [MedicalConsultationServiceImpl],
+  providers: [MedicalConsultationServiceImpl,
+  PatientClient,
+  DoctorClient],
   imports:[
     TypeOrmModule.forFeature([MedicalConsultation]),
     TypeOrmModule.forFeature([MedicalRecord])

@@ -6,12 +6,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMedicalRecordDto } from 'src/application/index.application';
 import { MedicalRecordResponse } from 'src/application/medical-record/dto/update-medical-record.dto';
+import { PatientClient } from 'shared/medical-record/patient.client';
+import { DoctorClient } from 'shared/doctor/doctor.client';
+import { format } from 'date-fns';
 
 @Injectable()
 export class MedicalConsultationServiceImpl implements MedicalConsultationService{
 
   constructor(@InjectRepository(MedicalConsultation) private medicalConsultationRepository: Repository<MedicalConsultation>,
-  @InjectRepository(MedicalRecord) private medicalRecordRepository: Repository<MedicalRecord>){}
+  @InjectRepository(MedicalRecord) private medicalRecordRepository: Repository<MedicalRecord>,
+  private patientClient: PatientClient, private doctorClient: DoctorClient){}
 
   async create(createMedicalConsultationDto: CreateMedicalConsultationDto) {
     try{
@@ -65,7 +69,32 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
       const medicalConsultations=  await this.medicalConsultationRepository.find({where: {patientId: patientId}});
 
       if (!medicalConsultations || medicalConsultations.length == 0) return new MedicalConsultationResponse(`Medical Consultations with Patient Id ${patientId} are not registered`);
-      return medicalConsultations;
+
+      let medicalConsultationList = []
+
+      for(let i = 0; i<medicalConsultations.length; i++){
+        let doctorData = await this.doctorClient.findDoctorById(medicalConsultations[i].doctorId);
+        let lastMedicalRecord = await this.medicalRecordRepository.findOne({
+          where: {
+              medical_consultation: {
+                  id: medicalConsultations[i].id
+              }
+          },
+          relations: ['medical_consultation'],
+          order: {
+            id: 'DESC'
+          }
+         }
+        )
+        let lastRecordDate = lastMedicalRecord ? format(new Date(lastMedicalRecord.recordDate), 'dd/MM/yyyy HH:mm') : "Aun no elabora registro médico";
+        let consultationData = {
+          consultation: medicalConsultations[i],
+          doctorData: doctorData.resource,
+          lastRecordDate: lastRecordDate
+        }
+        medicalConsultationList.push(consultationData);
+      }
+      return medicalConsultationList;
     }catch(error){
       return new MedicalConsultationResponse(`An error ocurred when finding ` + error.message);
     }
@@ -76,7 +105,31 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
       const medicalConsultations=  await this.medicalConsultationRepository.find({where: {doctorId: doctorId}});
 
       if (!medicalConsultations || medicalConsultations.length == 0) return new MedicalConsultationResponse(`Medical Consultations with Doctor Id ${doctorId} are not registered`);
-      return medicalConsultations;
+      let medicalConsultationList = []
+
+      for(let i = 0; i<medicalConsultations.length; i++){
+        let patientData = await this.patientClient.findPatientById(medicalConsultations[i].patientId);
+        let lastMedicalRecord = await this.medicalRecordRepository.findOne({
+          where: {
+              medical_consultation: {
+                  id: medicalConsultations[i].id
+              }
+          },
+          relations: ['medical_consultation'],
+          order: {
+            id: 'DESC'
+          }
+         }
+        )
+        let lastRecordDate = lastMedicalRecord ? format(new Date(lastMedicalRecord.recordDate), 'dd/MM/yyyy HH:mm') : "Aun no elabora registro médico";
+        let consultationData = {
+          consultation: medicalConsultations[i],
+          patientData: patientData.resource,
+          lastRecordDate: lastRecordDate
+        }
+        medicalConsultationList.push(consultationData);
+      }
+      return medicalConsultationList;
     }catch(error){
       return new MedicalConsultationResponse(`An error ocurred when finding ` + error.message);
     }
@@ -87,7 +140,9 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
       const medicalConsultationExist=  await this.medicalConsultationRepository.findOneBy({id: id, patientId: patientId});
 
       if (!medicalConsultationExist) return new MedicalConsultationResponse(`Medical Consultation with Id ${id} and Patient Id ${patientId} is not registered`);
-      return new MedicalConsultationResponse('',medicalConsultationExist);
+      let doctorData = await this.doctorClient.findDoctorById(medicalConsultationExist.doctorId);
+      let doctor = doctorData.resource
+      return {medicalConsultationExist, doctor}
     }catch(error){
       return new MedicalConsultationResponse(`An error ocurred when finding ` + error.message);
     }
@@ -98,7 +153,9 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
       const medicalConsultationExist=  await this.medicalConsultationRepository.findOneBy({id: id, doctorId: doctorId});
 
       if (!medicalConsultationExist) return new MedicalConsultationResponse(`Medical Consultation with Id ${id} and Doctor Id ${doctorId} is not registered`);
-      return new MedicalConsultationResponse('',medicalConsultationExist);
+      let patientData = await this.patientClient.findPatientById(medicalConsultationExist.patientId);
+      let patient = patientData.resource
+      return {medicalConsultationExist, patient}
     }catch(error){
       return new MedicalConsultationResponse(`An error ocurred when finding ` + error.message);
     }

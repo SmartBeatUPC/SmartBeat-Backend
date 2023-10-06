@@ -18,9 +18,9 @@ export class MedicalRecordClient {
   })
   private readonly clientProxy: ClientProxy;
 
-  async createMedicalRecord(consultationId: number,createMedicalRecordDto: CreateMedicalRecordDto){
+  async createMedicalRecord(id: number,createMedicalRecordDto: CreateMedicalRecordDto){
 
-    const response = await lastValueFrom(this.clientProxy.send({ cmd: 'createMedicalRecord' }, {consultationId,createMedicalRecordDto})
+    const response = await lastValueFrom(this.clientProxy.send({ cmd: 'createMedicalRecord' }, {id,createMedicalRecordDto})
       .pipe(
         map(response => response)
       ));
@@ -28,8 +28,8 @@ export class MedicalRecordClient {
     return response;
   }
 
-  async findAllMedicalRecordsByMedicalConsultationId(consultationId:number){
-    const response = await lastValueFrom(this.clientProxy.send({ cmd: 'findAllMedicalRecordsByMedicalConsultationId' }, consultationId)
+  async findAllMedicalRecordsByMedicalConsultationId(id:number){
+    const response = await lastValueFrom(this.clientProxy.send({ cmd: 'findAllMedicalRecordsByMedicalConsultationId' }, id)
       .pipe(
         map(response => response)
       ));

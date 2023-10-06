@@ -21,9 +21,9 @@ export class MedicalInformationServiceImpl implements MedicalInformationService{
     }
   }
 
-  async createMedicalRecordAndMedicalInformation(consultationId: number, createMedicalRecordDto: any, createMedicalInformationDto: CreateMedicalInformationDto) {
+  async createMedicalRecordAndMedicalInformation(id: number, createMedicalRecordDto: any, createMedicalInformationDto: CreateMedicalInformationDto) {
     try{
-      const responseMedicalRecord = await this.medicalRecordClient.createMedicalRecord(consultationId,createMedicalRecordDto);
+      const responseMedicalRecord = await this.medicalRecordClient.createMedicalRecord(id,createMedicalRecordDto);
 
       if(!responseMedicalRecord || responseMedicalRecord.success == false) return new MedicalInformationResponse(responseMedicalRecord.message);
       let newMedicalRecord = responseMedicalRecord.resource;
