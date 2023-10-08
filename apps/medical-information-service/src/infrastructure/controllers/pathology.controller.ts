@@ -12,6 +12,12 @@ export class PathologyController {
     return this.pathologyService.create(id ,createPathologyDto);
   }
 
+  @MessagePattern({cmd: 'registerPathologiesByMedicalInformationId'})
+  registerPathologiesByMedicalInformationId(data: {id: number, pathologies: any}) {
+    const {id, pathologies} = data
+    return this.pathologyService.registerPathologiesByMedicalInformationId(id ,pathologies.pathologies);
+  }
+
   @MessagePattern({cmd: 'findAllPathologies'})
   findAll() {
     return this.pathologyService.findAll();

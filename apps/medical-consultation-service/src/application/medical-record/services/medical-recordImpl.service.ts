@@ -73,7 +73,7 @@ export class MedicalRecordServiceImpl implements MedicalRecordService{
       if(!MedicalRecords || MedicalRecords.length == 0) return new MedicalRecordResponse(`No Medical Records found with the inserted Medical Consultation Id ${consultationId}`);
       const formattedMedicalRecords = MedicalRecords.map((record) => ({
         ...record,
-        recordDate: format(new Date(record.recordDate), 'dd/MM/yyyy HH:mm'),
+        recordDate: format(new Date(record.recordDate), 'yyyy/MM/dd'),
       }));
   
       return formattedMedicalRecords;

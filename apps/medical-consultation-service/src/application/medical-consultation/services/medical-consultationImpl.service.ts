@@ -86,7 +86,7 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
           }
          }
         )
-        let lastRecordDate = lastMedicalRecord ? format(new Date(lastMedicalRecord.recordDate), 'dd/MM/yyyy HH:mm') : "Aun no elabora registro médico";
+        let lastRecordDate = lastMedicalRecord ? format(new Date(lastMedicalRecord.recordDate), 'yyyy/MM/dd') : "Aun no elabora registro médico";
         let consultationData = {
           consultation: medicalConsultations[i],
           doctorData: doctorData.resource,
@@ -121,7 +121,7 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
           }
          }
         )
-        let lastRecordDate = lastMedicalRecord ? format(new Date(lastMedicalRecord.recordDate), 'dd/MM/yyyy HH:mm') : "Aun no elabora registro médico";
+        let lastRecordDate = lastMedicalRecord ? format(new Date(lastMedicalRecord.recordDate), 'yyyy/MM/dd') : "Aun no elabora registro médico";
         let consultationData = {
           consultation: medicalConsultations[i],
           patientData: patientData.resource,

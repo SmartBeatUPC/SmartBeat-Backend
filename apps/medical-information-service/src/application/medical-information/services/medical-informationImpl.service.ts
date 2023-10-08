@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMedicalInformationDto } from '../dto/create-medical-information.dto';
 import { MedicalInformationResponse, UpdateMedicalInformationDto } from '../dto/update-medical-information.dto';
-import { MedicalInformation, MedicalInformationService } from 'src/domain/index.domain';
+import { MedicalInformation, MedicalInformationService, Pathology, Ppg } from 'src/domain/index.domain';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MedicalRecordClient } from 'src/shared/medical-record/medical-record.client';
@@ -10,6 +10,8 @@ import { MedicalRecordClient } from 'src/shared/medical-record/medical-record.cl
 export class MedicalInformationServiceImpl implements MedicalInformationService{
 
   constructor(@InjectRepository(MedicalInformation) private medicalInformationRepository: Repository<MedicalInformation>,
+  @InjectRepository(Pathology) private pathologyRepository: Repository<Pathology>,
+  @InjectRepository(Ppg) private ppgRepository: Repository<Ppg>,
   private medicalRecordClient: MedicalRecordClient){}
   
   calculateBMI(heightPatient: number, weightPatient: number) {
@@ -38,7 +40,40 @@ export class MedicalInformationServiceImpl implements MedicalInformationService{
     }
   }
 
-  
+  async getCompleteMedicalInformationById(id: number){
+    try{
+      const medicalInformationExist = await this.medicalInformationRepository.findOneBy({id:id});
+      if(!medicalInformationExist) return new MedicalInformationResponse(`Medical Information with id ${id} not found`);
+      const PpgExist = await this.ppgRepository.findOneBy({medicalInformationId: id});
+      if(!PpgExist) return new MedicalInformationResponse(`PPG with Medical Information id ${id} is not registered.`);
+      let listPathologies = []
+      const pathologies = await this.pathologyRepository.findBy({medicalInformationId: id});
+      if (pathologies || pathologies.length > 0) {
+        await pathologies.forEach((pathology) => {
+            listPathologies.push(pathology.pathology);
+        });
+      }
+      let completeMedicalInformation:any = '';
+      completeMedicalInformation = {
+        height: medicalInformationExist.height,
+        weight: medicalInformationExist.weight,
+        smoke: medicalInformationExist.smoke,
+        bmi: medicalInformationExist.bmi,
+        alcohol: medicalInformationExist.alcohol,
+        sedentary: medicalInformationExist.sedentary,
+        bloodPressureSistolic: PpgExist.bloodPressureSistolic,
+        bloodPressureDiastolic: PpgExist.bloodPressureDiastolic,
+        heartRate: PpgExist.heartRate,
+        success: true,
+        pathologies: listPathologies
+      }
+
+      return completeMedicalInformation;
+
+    }catch(error){
+      return new MedicalInformationResponse('An error occurred while saving medical-information: '+error.message);
+    }
+  }
 
   async create(recordId: number ,createMedicalInformationDto: CreateMedicalInformationDto) {
     try{

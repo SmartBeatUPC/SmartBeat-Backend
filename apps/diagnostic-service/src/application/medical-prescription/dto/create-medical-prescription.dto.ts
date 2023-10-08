@@ -1,4 +1,4 @@
-import { IsDecimal, IsString, MaxLength, MinLength } from "class-validator";
+import { IsDecimal, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 
 export class CreateMedicalPrescriptionDto {
 
@@ -9,4 +9,19 @@ export class CreateMedicalPrescriptionDto {
 
     @IsDecimal()
     dosage: number;
+
+    @IsString()
+    @IsOptional()
+    @MaxLength(50)
+    via: string;
+
+    @IsString()
+    @IsOptional()
+    @MaxLength(50)
+    frequency: string;
+
+    @IsString()
+    @IsOptional()
+    @MaxLength(50)
+    duration: string;
 }

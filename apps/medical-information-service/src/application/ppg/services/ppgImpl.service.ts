@@ -57,7 +57,7 @@ export class PpgServiceImpl implements PpgService{
       let medicalInformationExist = await this.medicalInformationRepository.findOneBy({medicalRecordId: medicalRecordsResponse[i].id})
       if(medicalInformationExist){
         let ppg = await this.ppgRepository.findOneBy({medicalInformationId: medicalInformationExist.id});
-        let ppgDateChanged = format(new Date(ppg.ppgDate), 'dd/MM/yyyy HH:mm');
+        let ppgDateChanged = format(new Date(ppg.ppgDate), 'yyyy/MM/dd');
         let medicalRecordId = medicalInformationExist.medicalRecordId;
         if(ppg) ppgList.push({ ppg: {
           ...ppg,

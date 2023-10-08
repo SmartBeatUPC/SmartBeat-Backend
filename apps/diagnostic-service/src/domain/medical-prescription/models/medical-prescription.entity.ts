@@ -16,6 +16,24 @@ export class MedicalPrescription {
     })
     dosage: number;
 
+    @Column('varchar',{
+        length: 50,
+        nullable: true
+    })
+    via: string;
+
+    @Column('varchar',{
+        length: 50,
+        nullable: true
+    })
+    frequency: string;
+
+    @Column('varchar',{
+        length: 50,
+        nullable: true
+    })
+    duration: string;
+    
     @Column('int',{
         name: 'diagnostic_id'
     })

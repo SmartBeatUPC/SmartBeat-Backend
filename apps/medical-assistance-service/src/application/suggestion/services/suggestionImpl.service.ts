@@ -6,11 +6,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import OpenAI from 'openai';
 import { Repository } from 'typeorm';
 import { promptSuggestion, promptPathology } from 'src/application/prompts';
+import { MedicalInformationClient } from 'src/shared/medical-information/medical-information.client';
+import { PatientClient } from 'src/shared/patient/patient.client';
 
 
 @Injectable()
 export class SuggestionServiceImpl implements SuggestionService{
-  constructor(@InjectRepository(Suggestion) private suggestionRepository: Repository<Suggestion>){}
+  constructor(@InjectRepository(Suggestion) private suggestionRepository: Repository<Suggestion>,
+  private patientClient: PatientClient,
+  private medicalInformationClient: MedicalInformationClient){}
 
   async startOpenAI(){
     try {
@@ -73,7 +77,47 @@ export class SuggestionServiceImpl implements SuggestionService{
     }
   }
 
-  
+  async makeGPTSuggestionWithIds(methodology: boolean, patientId: number, informationId: number){
+    try{
+      const methodologyChoosed = methodology ? 'Guía: Europea' : 'Guía: Americana';
+      let patientInfoText = '';
+      const patientExist = await this.patientClient.findPatientById(patientId);
+      if(!patientExist || !patientExist.success) return new SuggestionResponse(`Patient with id ${patientId} is not registered`)
+      const medicalInformationExist = await this.medicalInformationClient.getCompleteMedicalInformationById(informationId);
+      if(!medicalInformationExist || !medicalInformationExist.success) return new SuggestionResponse(medicalInformationExist.message);
+      const {pathologies, success, ...medicalInformationData} = medicalInformationExist;
+      for (const [key, value] of Object.entries(medicalInformationData)) {
+        patientInfoText += `, ${key}: ${value}`;
+      }
+      let gptPrompt = promptSuggestion.toString() + methodologyChoosed.toString() + ', Edad: '+ patientExist.resource.age +', Genero: ' + patientExist.resource.gender  + ', Nacionalidad: ' + patientExist.resource.nationality + patientInfoText.toString();
+      let pathologiesText = '';
+      if (pathologies && pathologies.length != 0) {
+        for (const pathology of pathologies) {
+          pathologiesText += `, ${pathology}`;
+        }
+        pathologiesText = pathologiesText.slice(2);
+        gptPrompt = gptPrompt  + promptPathology.toString()+pathologiesText.toString();
+      }
+      const openai = await new OpenAI({
+        apiKey: process.env.CHATGPT_KEY
+      });
+      const response = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            "role": "user",
+            "content": gptPrompt
+          }
+        ],
+      });
+
+      let responseAssistance = response.choices[0].message.content;
+      let totalTokens = response.usage.total_tokens;
+      return {responseAssistance, totalTokens};
+    } catch(error){
+      return new SuggestionResponse(`An error ocurred when using GPT Suggestion: ` + error.message);
+    }
+  }
 
   async create(recordId: number, createSuggestionDto: CreateSuggestionDto) {
     try{

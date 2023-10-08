@@ -6,7 +6,7 @@ export class RequestDiagnosticDto{
     @ApiProperty()
     @IsString()
     @MinLength(1)
-    @MaxLength(300)
+    @MaxLength(500)
     diagnosticResult: string;
     
 }

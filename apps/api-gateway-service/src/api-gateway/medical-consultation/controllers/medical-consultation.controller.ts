@@ -4,8 +4,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { HttpExceptionFilter } from "src/api-gateway/util/http-exception.filter";
 import { RequestMedicalConsultationDto } from "../models/medical-consultation.dto";
 import { RequestMedicalRecordAndInformationDto, RequestMedicalRecordDto } from "../models/medical-record.dto";
-import { RequestDiagnosticDto } from "src/api-gateway/diagnostic/models/diagnostic.dto";
-import { RequestMedicalInformationDto } from "src/api-gateway/medical-information/models/medical-information.dto";
+
 
 @ApiTags('medical consultations')
 @Controller('medical-consultation')
@@ -13,7 +12,6 @@ import { RequestMedicalInformationDto } from "src/api-gateway/medical-informatio
 export class MedicalConsultationController {
   
     constructor(@Inject('MEDICAL_CONSULTATION_SERVICE') private medicalConsultationService: ClientProxy,
-    @Inject('DIAGNOSTIC_SERVICE') private diagnosticService: ClientProxy,
     @Inject('MEDICAL_INFORMATION_SERVICE') private medicalInformationService: ClientProxy) {}
 
     @Post()
@@ -56,12 +54,6 @@ export class MedicalConsultationController {
     @Get(':id/medical-record/:recordId')
     findOneMedicalRecordByIdAndMedicalConsultationId(@Param('id', ParseIntPipe) id: number,@Param('recordId', ParseIntPipe) recordId: number ) {
         return this.medicalConsultationService.send({ cmd: 'findOneMedicalRecordByIdAndMedicalConsultationId' }, {id,recordId});
-    }
-
-    //Diagnostic
-    @Post(':id/diagnostic')
-    createDiagnostic(@Param('id', ParseIntPipe)id: number, @Body() createDiagnosticDto: RequestDiagnosticDto) {
-        return this.diagnosticService.send({ cmd: 'createDiagnostic' }, {id,createDiagnosticDto});
     }
 
     //Medical Record & Medical Information

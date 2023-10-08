@@ -41,5 +41,10 @@ export class RecommendationController {
     return this.recommendationService.makeGPTRecommendation(methodology, age, gender, ppg,medicalInformation, pathologies);
   }
 
+  @MessagePattern({cmd: 'makeGPTRecommendationWithIds'})
+  makeGPTRecommendationWithIds(data: {methodology: boolean, patientId: number, medicalInformationId: number}) {
+    const {methodology, patientId, medicalInformationId} = data
+    return this.recommendationService.makeGPTRecommendationWithIds(methodology, patientId, medicalInformationId);
+  }
   
 }

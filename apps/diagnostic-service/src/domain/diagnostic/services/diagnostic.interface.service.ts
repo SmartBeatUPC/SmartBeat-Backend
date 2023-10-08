@@ -1,9 +1,9 @@
 import { CreateDiagnosticDto, UpdateDiagnosticDto } from "src/application/index.application";
 
 export interface DiagnosticService{
-    create(consultationId: number, createDiagnosticDto: CreateDiagnosticDto);
+    create(id: number, createDiagnosticDto: CreateDiagnosticDto);
     findAll();
     findOne(id: number);
-    findByMedicalConsultationId(consultationId: number);
+    findByMedicalRecordId(id: number);
     update(id: number, updateDiagnosticDto: UpdateDiagnosticDto);
 }

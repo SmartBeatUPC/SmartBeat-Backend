@@ -40,4 +40,10 @@ export class SuggestionController {
     return this.suggestionService.makeGPTSuggestion(methodology, age, gender, ppg, medicalInformation, pathologies);
   }
 
+  @MessagePattern({cmd: 'makeGPTSuggestionWithIds'})
+  makeGPTSuggestionWithIds(data: {methodology: boolean, patientId: number, medicalInformationId: number}) {
+    const {methodology, patientId, medicalInformationId} = data
+    return this.suggestionService.makeGPTSuggestionWithIds(methodology, patientId, medicalInformationId);
+  }
+
 }

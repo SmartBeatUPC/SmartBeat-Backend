@@ -10,7 +10,8 @@ export class Pathology {
     pathology: string;
 
     @Column('int',{
-        nullable:false
+        nullable:false,
+        name: 'medical_information_id'
     })
-    medical_information_id: number;
+    medicalInformationId: number;
 }

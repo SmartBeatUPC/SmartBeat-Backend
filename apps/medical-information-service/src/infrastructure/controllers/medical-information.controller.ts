@@ -29,6 +29,11 @@ export class MedicalInformationController {
     return this.medicalInformationService.findOne(id);
   }
 
+  @MessagePattern({cmd: 'getCompleteMedicalInformationById'})
+  getCompleteMedicalInformationById(id: number) {
+    return this.medicalInformationService.getCompleteMedicalInformationById(id);
+  }
+
   @MessagePattern({cmd: 'updateMedicalInformation'})
   update(data:{id: number, updateMedicalInformationDto: UpdateMedicalInformationDto}) {
     const {id, updateMedicalInformationDto} = data

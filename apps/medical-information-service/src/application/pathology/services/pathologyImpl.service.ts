@@ -19,10 +19,33 @@ export class PathologyServiceImpl implements PathologyService{
       if(!medicalInformationExist) return new PathologyResponse(`Medical Information with id ${informationId} not found`)
 
       const newPathology = await this.pathologyRepository.save({
-      medical_information_id: medicalInformationExist.id,
+      medicalInformationId: medicalInformationExist.id,
       ...createPathologyDto
       });
     return new PathologyResponse('',newPathology);
+    }catch(error){
+      return new PathologyResponse('An error occurred while creating Pathology: '+error.message);
+    }
+  }
+
+  async registerPathologiesByMedicalInformationId(id: number, pathologies: any){
+    try{
+
+      const medicalInformationExist = await this.medicalInformationRepository.findOneBy({id:id})
+      if(!medicalInformationExist) return new PathologyResponse(`Medical Information with id ${id} not found`)
+
+      if(!pathologies || pathologies.length == 0) return new PathologyResponse(`No pathologies to be recorded`)
+
+      let listPathologies = []
+      for(let i=0; i< pathologies.length; i++){
+        const newPathology = await this.pathologyRepository.save({
+          medicalInformationId: medicalInformationExist.id,
+          pathology: pathologies[i].pathology
+          });
+          listPathologies.push(newPathology);
+      }
+      
+    return listPathologies;
     }catch(error){
       return new PathologyResponse('An error occurred while creating Pathology: '+error.message);
     }
@@ -38,12 +61,25 @@ export class PathologyServiceImpl implements PathologyService{
       const medicalInformationExist = await this.medicalInformationRepository.findOneBy({id:informationId})
       if(!medicalInformationExist) return new PathologyResponse(`Medical Information with id ${informationId} not found`)
 
-      const PathologyExist = await this.pathologyRepository.findOneBy({medical_information_id:informationId});
+      const PathologyExist = await this.pathologyRepository.findOneBy({medicalInformationId:informationId});
       if(!PathologyExist) return new PathologyResponse(`Pathology with Medical Information id ${informationId} not found`)
       return new PathologyResponse('',PathologyExist);
     }catch(error){
       return new PathologyResponse('An error occurred while finding Pathology: '+error.message);
     }
+  }
+
+  async findAllPathologiesByMedicalInformationId(informationId: number){
+    try{
+
+        const medicalInformationExist = await this.medicalInformationRepository.findOneBy({id:informationId})
+        if(!medicalInformationExist) return new PathologyResponse(`Medical Information with id ${informationId} not found`)
+
+        const listPathologies = await this.pathologyRepository.findBy({medicalInformationId:informationId});
+        return listPathologies;
+      }catch(error){
+        return new PathologyResponse('An error occurred while finding Pathology: '+error.message);
+      }
   }
 
   async update(id: number, updatePathologyDto: UpdatePathologyDto) {
@@ -53,7 +89,7 @@ export class PathologyServiceImpl implements PathologyService{
 
       const updatedPathology = await this.pathologyRepository.save({
         id: PathologyExist.id,
-        medical_information_id: PathologyExist.medical_information_id,
+        medicalInformationId: PathologyExist.medicalInformationId,
         ...updatePathologyDto
       })
       return new PathologyResponse('',updatedPathology);

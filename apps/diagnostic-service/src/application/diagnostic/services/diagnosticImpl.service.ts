@@ -10,10 +10,10 @@ export class DiagnosticServiceImpl implements DiagnosticService {
 
   constructor(@InjectRepository(Diagnostic) private diagnosticRepository: Repository<Diagnostic>){}
 
-  async create(consultationId: number, createDiagnosticDto: CreateDiagnosticDto) {
+  async create(id: number, createDiagnosticDto: CreateDiagnosticDto) {
     try{
       const newDiagnostic = await this.diagnosticRepository.save({
-      medicalConsultationId: consultationId,
+      medicalRecordId: id,
       ...createDiagnosticDto
       });
     return new DiagnosticResponse('',newDiagnostic);
@@ -36,10 +36,10 @@ export class DiagnosticServiceImpl implements DiagnosticService {
     }
   }
 
-  async findByMedicalConsultationId(consultationId: number) {
+  async findByMedicalRecordId(id: number) {
     try{
-      const diagnosticExist = await this.diagnosticRepository.findOneBy({medicalConsultationId:consultationId});
-      if(!diagnosticExist) return new DiagnosticResponse(`Diagnostic with Consultation id ${consultationId} was not found`);
+      const diagnosticExist = await this.diagnosticRepository.findOneBy({medicalRecordId:id});
+      if(!diagnosticExist) return new DiagnosticResponse(`Diagnostic with Medical Record id ${id} was not found`);
       return new DiagnosticResponse('',diagnosticExist);
     }catch(error){
       return new DiagnosticResponse('An error occurred while finding diagnostic: '+error.message);
