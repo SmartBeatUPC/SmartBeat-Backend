@@ -12,6 +12,12 @@ export class DiagnosticController {
     return this.diagnosticService.create(id, createDiagnosticDto);
   }
 
+  @MessagePattern({cmd: 'createCompleteDiagnostic'})
+  createCompleteDiagnostic(data: {id: number, completeDiagnostic: any}) {
+    const {id, completeDiagnostic} = data
+    return this.diagnosticService.createCompleteDiagnostic(id, completeDiagnostic.createDiagnosticDto, completeDiagnostic.medicalPrescriptions);
+  }
+
   @MessagePattern({cmd: 'findAllDiagnostics'})
   findAll() {
     return this.diagnosticService.findAll();
@@ -25,6 +31,11 @@ export class DiagnosticController {
   @MessagePattern({cmd: 'findOneDiagnosticByMedicalRecordId'})
   findByMedicalRecord(id: number) {
     return this.diagnosticService.findByMedicalRecordId(id);
+  }
+
+  @MessagePattern({cmd: 'findCompleteDiagnosticByMedicalRecordId'})
+  findCompleteDiagnosticByMedicalRecord(id: number) {
+    return this.diagnosticService.findCompleteDiagnosticByMedicalRecordId(id);
   }
 
   @MessagePattern({cmd: 'updateDiagnostic'})
