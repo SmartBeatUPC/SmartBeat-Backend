@@ -87,11 +87,12 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
          }
         )
         let lastRecordDate = lastMedicalRecord ? format(new Date(lastMedicalRecord.recordDate), 'yyyy/MM/dd') : "Aun no elabora registro médico";
+        let lastMedicalRecordId = lastMedicalRecord ? lastMedicalRecord.id : "No se ha generado ningún Id"; 
         let consultationData = {
           consultation: medicalConsultations[i],
           doctorData: doctorData.resource,
           lastRecordDate: lastRecordDate,
-          lastMedicalRecordId: lastMedicalRecord.id
+          lastMedicalRecordId: lastMedicalRecordId
         }
         medicalConsultationList.push(consultationData);
       }
@@ -123,11 +124,12 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
          }
         )
         let lastRecordDate = lastMedicalRecord ? format(new Date(lastMedicalRecord.recordDate), 'yyyy/MM/dd') : "Aun no elabora registro médico";
+        let lastMedicalRecordId = lastMedicalRecord ? lastMedicalRecord.id : "No se ha generado ningún Id"; 
         let consultationData = {
           consultation: medicalConsultations[i],
           patientData: patientData.resource,
           lastRecordDate: lastRecordDate,
-          lastMedicalRecordId: lastMedicalRecord.id
+          lastMedicalRecordId: lastMedicalRecordId
         }
         medicalConsultationList.push(consultationData);
       }
