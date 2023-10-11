@@ -90,7 +90,8 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
         let consultationData = {
           consultation: medicalConsultations[i],
           doctorData: doctorData.resource,
-          lastRecordDate: lastRecordDate
+          lastRecordDate: lastRecordDate,
+          lastMedicalRecordId: lastMedicalRecord.id
         }
         medicalConsultationList.push(consultationData);
       }
@@ -125,7 +126,8 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
         let consultationData = {
           consultation: medicalConsultations[i],
           patientData: patientData.resource,
-          lastRecordDate: lastRecordDate
+          lastRecordDate: lastRecordDate,
+          lastMedicalRecordId: lastMedicalRecord.id
         }
         medicalConsultationList.push(consultationData);
       }

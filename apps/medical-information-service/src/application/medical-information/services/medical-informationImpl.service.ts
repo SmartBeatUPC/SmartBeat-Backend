@@ -55,6 +55,7 @@ export class MedicalInformationServiceImpl implements MedicalInformationService{
       }
       let completeMedicalInformation:any = '';
       completeMedicalInformation = {
+        medicalRecordId: medicalInformationExist.medicalRecordId,
         height: medicalInformationExist.height,
         weight: medicalInformationExist.weight,
         smoke: medicalInformationExist.smoke,

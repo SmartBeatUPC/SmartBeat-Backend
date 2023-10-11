@@ -85,7 +85,7 @@ export class SuggestionServiceImpl implements SuggestionService{
       if(!patientExist || !patientExist.success) return new SuggestionResponse(`Patient with id ${patientId} is not registered`)
       const medicalInformationExist = await this.medicalInformationClient.getCompleteMedicalInformationById(informationId);
       if(!medicalInformationExist || !medicalInformationExist.success) return new SuggestionResponse(medicalInformationExist.message);
-      const {pathologies, success, ...medicalInformationData} = medicalInformationExist;
+      const {pathologies, success, medicalRecordId, ...medicalInformationData} = medicalInformationExist;
       for (const [key, value] of Object.entries(medicalInformationData)) {
         patientInfoText += `, ${key}: ${value}`;
       }
