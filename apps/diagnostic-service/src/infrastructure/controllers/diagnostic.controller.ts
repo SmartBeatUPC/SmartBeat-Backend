@@ -23,7 +23,7 @@ export class DiagnosticController {
     return this.diagnosticService.findAll();
   }
 
-  @MessagePattern({cmd: 'findOneDiagnosticById'})
+  @MessagePattern({cmd: 'findOneDiagnostic'})
   findOne(id: number) {
     return this.diagnosticService.findOne(id);
   }
