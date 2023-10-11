@@ -70,7 +70,7 @@ export class DiagnosticServiceImpl implements DiagnosticService {
       if(!diagnostic) return new DiagnosticResponse(`Diagnostic with Medical Record id ${id} was not found`);
       let medicalPrescriptions:any = []
       medicalPrescriptions = await this.medicalPrescriptionRepository.findBy({diagnosticId: diagnostic.id});
-      if(!medicalPrescriptions || medicalPrescriptions.length == 0) medicalPrescriptions = 'No se ha recetado ninguna medicina';
+      if(!medicalPrescriptions || medicalPrescriptions.length == 0) medicalPrescriptions = [];
       return {diagnostic, medicalPrescriptions, success: true};
     }catch(error){
       return new DiagnosticResponse('An error occurred while finding diagnostic: '+error.message);
