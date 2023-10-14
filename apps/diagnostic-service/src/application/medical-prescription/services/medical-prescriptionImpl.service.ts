@@ -45,7 +45,7 @@ export class MedicalPrescriptionServiceImpl implements MedicalPrescriptionServic
         listMedicalPrescriptions.push(newMedicalPrescription);
       }
       
-      return listMedicalPrescriptions;
+      return {listMedicalPrescriptions, success: true};
     }catch(error){
       return new MedicalPrescriptionResponse('An error occurred while creating Medical Prescriptions: '+error.message);
     }
@@ -78,7 +78,7 @@ export class MedicalPrescriptionServiceImpl implements MedicalPrescriptionServic
     try{
       const MedicalPrescriptions = await this.medicalPrescriptionRepository.findBy({diagnosticId: id});
       if(!MedicalPrescriptions || MedicalPrescriptions.length == 0) return new MedicalPrescriptionResponse(`Medical Prescriptions with Diagnostic id ${id} was not found`);
-      return MedicalPrescriptions;
+      return {MedicalPrescriptions, success:true};
     }catch(error){
       return new MedicalPrescriptionResponse('An error occurred while finding Medical Prescription: '+error.message);
     }

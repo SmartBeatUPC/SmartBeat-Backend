@@ -93,7 +93,7 @@ export class UserServiceImpl implements UserService {
     }
     if(dataUser == null) return new UserResponse(`User doesn't have a role`);
 
-    return {dataUser, emailUser, isDoctor};
+    return {dataUser, emailUser, isDoctor, success: true};
     }
     catch (error){
       return new UserResponse(`An error ocurred when finding ` + error.message);
@@ -132,8 +132,8 @@ export class UserServiceImpl implements UserService {
       const salt = await genSalt(+process.env.SALT)
       updateUserDto.password = await hash(updateUserDto.password, salt);
       const updatedUser = Object.assign(UserExist,updateUserDto);
-
-      return await this.userRepository.save(updatedUser);
+      let updateUser = await this.userRepository.save(updatedUser);
+      return new UserResponse('', updateUser);
     }catch(error){
       return new UserResponse(`An error ocurred when updating user: ` + error.message);
     }

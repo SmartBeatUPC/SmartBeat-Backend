@@ -26,5 +26,10 @@ export class PpgController {
     updatePpg(@Param('id', ParseIntPipe) id: number, @Body() updatePpgDto: RequestPpgDto) {
         return this.medicalInformationService.send({ cmd: 'updatePpg' }, {id, updatePpgDto});
     }
+
+    @Post('/clasificateBloodPressure')
+    clasificateBloodPressure(@Body() bloodPressure: RequestPpgDto) {
+        return this.medicalInformationService.send({ cmd: 'clasificateBloodPressure' }, bloodPressure);
+    }
   
 }

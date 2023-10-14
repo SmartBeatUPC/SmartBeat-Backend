@@ -17,7 +17,8 @@ export class MedicalInformationServiceImpl implements MedicalInformationService{
   calculateBMI(heightPatient: number, weightPatient: number) {
     try{
       const BMI =  weightPatient/ (heightPatient*heightPatient);
-      return BMI.toFixed(1);
+      
+      return {BMI: BMI.toFixed(1), success: true};
     }catch(error){
       return new MedicalInformationResponse('An error occurred while calculate BMI: '+error.message);
     }
@@ -34,7 +35,7 @@ export class MedicalInformationServiceImpl implements MedicalInformationService{
       medicalRecordId: newMedicalRecord.id,
       ...createMedicalInformationDto
       });
-    return {newMedicalInformation, newMedicalRecord};
+    return {newMedicalInformation, newMedicalRecord, success: true};
     }catch(error){
       return new MedicalInformationResponse('An error occurred while saving medical-information: '+error.message);
     }

@@ -63,7 +63,7 @@ export class DoctorCenterServiceImpl implements DoctorCenterService{
       const doctorCenters = await this.doctorCenterRepository.findBy({healthCenterId: centerId});
       if(!doctorCenters) return new DoctorCenterResponse(`Doctor-Center with Health-Center id ${centerId} was not found`)
 
-      return doctorCenters;
+      return {doctorCenters, success:true};
     } catch(error){
       return new DoctorCenterResponse('An error occurred while finding doctor-center: '+error.message)
     }
@@ -117,7 +117,7 @@ export class DoctorCenterServiceImpl implements DoctorCenterService{
       const deletedDoctorCenter = await this.doctorCenterRepository.delete({
         id: id
       })
-      return deletedDoctorCenter;
+      return {deletedDoctorCenter, success:true};
     } catch(error){
       return new DoctorCenterResponse('An error occurred while removing doctor-center: '+error.message)
     }

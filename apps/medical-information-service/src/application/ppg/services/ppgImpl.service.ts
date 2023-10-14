@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MedicalRecordClient } from 'src/shared/medical-record/medical-record.client';
 import { format } from 'date-fns';
+import { rangosPresion } from '../blood-pressure-clasification';
 
 @Injectable()
 export class PpgServiceImpl implements PpgService{
@@ -49,24 +50,49 @@ export class PpgServiceImpl implements PpgService{
   async findAllPPGByConsultationId(consultationId: number){
     const medicalRecordsResponse = await this.medicalRecordClient.findAllMedicalRecordsByMedicalConsultationId(consultationId);
 
-    if(!medicalRecordsResponse || medicalRecordsResponse.length == 0) return new PpgResponse(medicalRecordsResponse.message);
+    if(!medicalRecordsResponse.medicalRecords || medicalRecordsResponse.medicalRecords.length == 0) return new PpgResponse(medicalRecordsResponse.message);
 
     let ppgList = [];
     let i: number;
-    for(i=0; i<medicalRecordsResponse.length;i++){
-      let medicalInformationExist = await this.medicalInformationRepository.findOneBy({medicalRecordId: medicalRecordsResponse[i].id})
+    console.log(medicalRecordsResponse.medicalRecords.length);
+    for(i=0; i<medicalRecordsResponse.medicalRecords.length;i++){
+      let medicalInformationExist = await this.medicalInformationRepository.findOneBy({medicalRecordId: medicalRecordsResponse.medicalRecords[i].id})
       if(medicalInformationExist){
         let ppg = await this.ppgRepository.findOneBy({medicalInformationId: medicalInformationExist.id});
-        let ppgDateChanged = format(new Date(ppg.ppgDate), 'yyyy/MM/dd');
-        let medicalRecordId = medicalInformationExist.medicalRecordId;
-        if(ppg) ppgList.push({ ppg: {
-          ...ppg,
-          ppgDate: ppgDateChanged,
-        }, medicalRecordId});
+        console.log(ppg)
+        if(ppg) {
+          let ppgDateChanged = format(new Date(ppg.ppgDate), 'yyyy/MM/dd');
+          let medicalRecordId = medicalInformationExist.medicalRecordId;
+          let resultPpg = ppg.bloodPressureSistolic - ppg.bloodPressureDiastolic;
+          let ppgClasification = await this.clasificateBloodPressure(ppg.bloodPressureSistolic, ppg.bloodPressureDiastolic);
+          ppgList.push({ ppg: {
+            ...ppg,
+            ppgDate: ppgDateChanged,
+            ppgBar:resultPpg,
+            ppgClasification: ppgClasification,
+          }, medicalRecordId});
+        }
       }
     }
     if(!ppgList || ppgList.length == 0) return new PpgResponse(`PPGs were not recorded in this Medical Consultation Id ${consultationId}.`);
-    return ppgList;
+    return {ppgs: ppgList, success: true};
+  }
+
+
+  async clasificateBloodPressure(sistolica: number, diastolica: number) {
+    const clasificacion = rangosPresion.find((rango) => {
+      return (
+        sistolica >= rango.minSistolica &&
+        sistolica <= rango.maxSistolica &&
+        diastolica >= rango.minDiastolica &&
+        diastolica <= rango.maxDiastolica
+      );
+    });
+    if (clasificacion) {
+      return clasificacion.clasificacion;
+    } else {
+      return 'No clasificado';
+    }
   }
 
   async update(id: number, updatePpgDto: UpdatePpgDto) {

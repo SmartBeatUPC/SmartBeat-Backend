@@ -76,7 +76,7 @@ export class MedicalRecordServiceImpl implements MedicalRecordService{
         recordDate: format(new Date(record.recordDate), 'yyyy/MM/dd'),
       }));
   
-      return formattedMedicalRecords;
+      return {medicalRecords: formattedMedicalRecords,success: true};
     }catch(error){
     return new MedicalRecordResponse(`An error ocurred when finding medical-record: ` + error.message);
     }

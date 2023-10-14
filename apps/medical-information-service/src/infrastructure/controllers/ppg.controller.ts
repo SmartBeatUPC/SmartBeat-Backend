@@ -30,4 +30,9 @@ export class PpgController {
     return this.ppgService.update(id, updatePpgDto);
   }
 
+  @MessagePattern({cmd: 'clasificateBloodPressure'})
+  clasificateBloodPressure(bloodPressure: CreatePpgDto) {
+    return this.ppgService.clasificateBloodPressure(bloodPressure.bloodPressureSistolic, bloodPressure.bloodPressureDiastolic);
+  }
+
 }

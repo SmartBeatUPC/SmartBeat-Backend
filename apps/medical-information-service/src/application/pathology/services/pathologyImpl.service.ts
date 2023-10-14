@@ -45,7 +45,7 @@ export class PathologyServiceImpl implements PathologyService{
           listPathologies.push(newPathology);
       }
       
-    return listPathologies;
+    return {listPathologies, success: true};
     }catch(error){
       return new PathologyResponse('An error occurred while creating Pathology: '+error.message);
     }
@@ -76,7 +76,7 @@ export class PathologyServiceImpl implements PathologyService{
         if(!medicalInformationExist) return new PathologyResponse(`Medical Information with id ${informationId} not found`)
 
         const listPathologies = await this.pathologyRepository.findBy({medicalInformationId:informationId});
-        return listPathologies;
+        return {listPathologies, success: true};
       }catch(error){
         return new PathologyResponse('An error occurred while finding Pathology: '+error.message);
       }

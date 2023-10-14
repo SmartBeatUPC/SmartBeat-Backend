@@ -87,7 +87,7 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
          }
         )
         let lastRecordDate = lastMedicalRecord ? format(new Date(lastMedicalRecord.recordDate), 'yyyy/MM/dd') : "Aun no elabora registro médico";
-        let lastMedicalRecordId = lastMedicalRecord ? lastMedicalRecord.id : "No se ha generado ningún Id"; 
+        let lastMedicalRecordId = lastMedicalRecord ? lastMedicalRecord.id : -1; 
         let consultationData = {
           consultation: medicalConsultations[i],
           doctorData: doctorData.resource,
@@ -96,7 +96,7 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
         }
         medicalConsultationList.push(consultationData);
       }
-      return medicalConsultationList;
+      return {medicalConsultations: medicalConsultationList,success: true};
     }catch(error){
       return new MedicalConsultationResponse(`An error ocurred when finding ` + error.message);
     }
@@ -124,7 +124,7 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
          }
         )
         let lastRecordDate = lastMedicalRecord ? format(new Date(lastMedicalRecord.recordDate), 'yyyy/MM/dd') : "Aun no elabora registro médico";
-        let lastMedicalRecordId = lastMedicalRecord ? lastMedicalRecord.id : "No se ha generado ningún Id"; 
+        let lastMedicalRecordId = lastMedicalRecord ? lastMedicalRecord.id : -1; 
         let consultationData = {
           consultation: medicalConsultations[i],
           patientData: patientData.resource,
@@ -133,7 +133,7 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
         }
         medicalConsultationList.push(consultationData);
       }
-      return medicalConsultationList;
+      return {medicalConsultations: medicalConsultationList,success: true};
     }catch(error){
       return new MedicalConsultationResponse(`An error ocurred when finding ` + error.message);
     }
@@ -146,7 +146,7 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
       if (!medicalConsultationExist) return new MedicalConsultationResponse(`Medical Consultation with Id ${id} and Patient Id ${patientId} is not registered`);
       let doctorData = await this.doctorClient.findDoctorById(medicalConsultationExist.doctorId);
       let doctor = doctorData.resource
-      return {medicalConsultationExist, doctor}
+      return {medicalConsultationExist, doctor, success: true}
     }catch(error){
       return new MedicalConsultationResponse(`An error ocurred when finding ` + error.message);
     }
@@ -159,7 +159,7 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
       if (!medicalConsultationExist) return new MedicalConsultationResponse(`Medical Consultation with Id ${id} and Doctor Id ${doctorId} is not registered`);
       let patientData = await this.patientClient.findPatientById(medicalConsultationExist.patientId);
       let patient = patientData.resource
-      return {medicalConsultationExist, patient}
+      return {medicalConsultationExist, patient, success: true}
     }catch(error){
       return new MedicalConsultationResponse(`An error ocurred when finding ` + error.message);
     }

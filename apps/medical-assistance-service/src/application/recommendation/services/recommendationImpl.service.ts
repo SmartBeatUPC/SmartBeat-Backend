@@ -73,7 +73,7 @@ export class RecommendationServiceImpl implements RecommendationService{
       
       let responseAssistance = response.choices[0].message.content;
       let totalTokens = response.usage.total_tokens;
-      return {responseAssistance, totalTokens};
+      return {responseAssistance, totalTokens, success: true};
     } catch(error){
       return new RecommendationResponse(`An error ocurred when using GPT Recommendation: ` + error.message);
     }
@@ -116,7 +116,7 @@ export class RecommendationServiceImpl implements RecommendationService{
       
       let responseAssistance = response.choices[0].message.content;
       let totalTokens = response.usage.total_tokens;
-      return {responseAssistance, totalTokens};
+      return {responseAssistance, totalTokens, success: true};
     } catch(error){
       return new RecommendationResponse(`An error ocurred when using GPT Recommendation: ` + error.message);
     }
