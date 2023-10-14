@@ -54,12 +54,10 @@ export class PpgServiceImpl implements PpgService{
 
     let ppgList = [];
     let i: number;
-    console.log(medicalRecordsResponse.medicalRecords.length);
     for(i=0; i<medicalRecordsResponse.medicalRecords.length;i++){
       let medicalInformationExist = await this.medicalInformationRepository.findOneBy({medicalRecordId: medicalRecordsResponse.medicalRecords[i].id})
       if(medicalInformationExist){
         let ppg = await this.ppgRepository.findOneBy({medicalInformationId: medicalInformationExist.id});
-        console.log(ppg)
         if(ppg) {
           let ppgDateChanged = format(new Date(ppg.ppgDate), 'yyyy/MM/dd');
           let medicalRecordId = medicalInformationExist.medicalRecordId;
