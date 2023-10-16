@@ -71,9 +71,13 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
       if (!medicalConsultations || medicalConsultations.length == 0) return new MedicalConsultationResponse(`Medical Consultations with Patient Id ${patientId} are not registered`);
 
       let medicalConsultationList = []
-
+      let doctorData:any = {resource: {name: '', lastName: ''}}
       for(let i = 0; i<medicalConsultations.length; i++){
-        let doctorData = await this.doctorClient.findDoctorById(medicalConsultations[i].doctorId);
+        try{
+          doctorData = await this.doctorClient.findDoctorById(medicalConsultations[i].doctorId);
+        }catch(error){
+          console.log('Authentication microservice is turned off.')
+        }
         let lastMedicalRecord = await this.medicalRecordRepository.findOne({
           where: {
               medical_consultation: {
@@ -109,8 +113,14 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
       if (!medicalConsultations || medicalConsultations.length == 0) return new MedicalConsultationResponse(`Medical Consultations with Doctor Id ${doctorId} are not registered`);
       let medicalConsultationList = []
 
+      let patientData:any = {resource: {name: '', lastName: ''}}
       for(let i = 0; i<medicalConsultations.length; i++){
-        let patientData = await this.patientClient.findPatientById(medicalConsultations[i].patientId);
+        try{
+          patientData = await this.patientClient.findPatientById(medicalConsultations[i].patientId);
+        }catch(error){
+          console.log('Authentication microservice is turned off.')
+        }
+        
         let lastMedicalRecord = await this.medicalRecordRepository.findOne({
           where: {
               medical_consultation: {
@@ -144,7 +154,12 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
       const medicalConsultationExist=  await this.medicalConsultationRepository.findOneBy({id: id, patientId: patientId});
 
       if (!medicalConsultationExist) return new MedicalConsultationResponse(`Medical Consultation with Id ${id} and Patient Id ${patientId} is not registered`);
-      let doctorData = await this.doctorClient.findDoctorById(medicalConsultationExist.doctorId);
+      let doctorData:any = {resource: {name: '', lastName: ''}}
+        try{
+          doctorData = await this.doctorClient.findDoctorById(medicalConsultationExist.doctorId);
+        }catch(error){
+          console.log('Authentication microservice is turned off.')
+        }
       let doctor = doctorData.resource
       return {medicalConsultationExist, doctor, success: true}
     }catch(error){
@@ -157,7 +172,12 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
       const medicalConsultationExist=  await this.medicalConsultationRepository.findOneBy({id: id, doctorId: doctorId});
 
       if (!medicalConsultationExist) return new MedicalConsultationResponse(`Medical Consultation with Id ${id} and Doctor Id ${doctorId} is not registered`);
-      let patientData = await this.patientClient.findPatientById(medicalConsultationExist.patientId);
+      let patientData:any = {resource: {name: '', lastName: ''}}
+        try{
+          patientData = await this.patientClient.findPatientById(medicalConsultationExist.patientId);
+        }catch(error){
+          console.log('Authentication microservice is turned off.')
+        }
       let patient = patientData.resource
       return {medicalConsultationExist, patient, success: true}
     }catch(error){

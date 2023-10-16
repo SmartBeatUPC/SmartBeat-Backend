@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { MedicalRecordClient } from 'src/shared/medical-record/medical-record.client';
 import { CreatePpgDto } from 'src/application/index.application';
 import { rangosPresion } from 'src/application/ppg/blood-pressure-clasification';
+import { DiagnosticClient } from 'src/shared/diagnostic/diagnostic.client';
 
 @Injectable()
 export class MedicalInformationServiceImpl implements MedicalInformationService{
@@ -14,7 +15,7 @@ export class MedicalInformationServiceImpl implements MedicalInformationService{
   constructor(@InjectRepository(MedicalInformation) private medicalInformationRepository: Repository<MedicalInformation>,
   @InjectRepository(Pathology) private pathologyRepository: Repository<Pathology>,
   @InjectRepository(Ppg) private ppgRepository: Repository<Ppg>,
-  private medicalRecordClient: MedicalRecordClient){}
+  private medicalRecordClient: MedicalRecordClient,private diagnosticClient: DiagnosticClient){}
   
   calculateBMI(heightPatient: number, weightPatient: number) {
     try{
@@ -75,6 +76,13 @@ export class MedicalInformationServiceImpl implements MedicalInformationService{
         });
       }
       let completeMedicalInformation:any = '';
+      let diagnosticExist = 'Desconocido';
+      try{
+        let diagnosticRegistered = await this.diagnosticClient.findCompleteDiagnosticByMedicalRecordId(medicalInformationExist.medicalRecordId);
+        diagnosticExist = (diagnosticRegistered.success) ? 'Realizado':'Por realizar';
+      }catch(error){
+        console.log('Diagnostic microservice is turned off.')
+      }
       completeMedicalInformation = {
         medicalRecordId: medicalInformationExist.medicalRecordId,
         height: medicalInformationExist.height,
@@ -86,6 +94,7 @@ export class MedicalInformationServiceImpl implements MedicalInformationService{
         bloodPressureSistolic: PpgExist.bloodPressureSistolic,
         bloodPressureDiastolic: PpgExist.bloodPressureDiastolic,
         heartRate: PpgExist.heartRate,
+        diagnosticExist: diagnosticExist,
         success: true,
         pathologies: listPathologies
       }
