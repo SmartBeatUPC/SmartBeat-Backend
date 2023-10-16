@@ -32,7 +32,7 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
     try {
         const consultationExist = await this.medicalConsultationRepository.findOneBy({ id: consultationId });
         if (!consultationExist) return new MedicalConsultationResponse(`Medical Consultation with id ${consultationId} was not found`);
-
+        let doctorData = await this.doctorClient.findDoctorById(consultationExist.doctorId);
         if(!createMedicalRecord.recordDate) {
           createMedicalRecord.recordDate = new Date()
         } 
@@ -42,7 +42,7 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
 
         const newRecord = await this.medicalRecordRepository.save(recordPreload);
 
-        return new MedicalRecordResponse('', newRecord);
+        return {resource: newRecord, success: true, doctorData: doctorData.resource};
     }
     catch (error) {
         return new MedicalRecordResponse('An error occurred while creating medical-record: ' + error);

@@ -5,9 +5,7 @@ export class Recommendation {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column('varchar',{
-        length: 400
-    })
+    @Column('varchar')
     recommendation: string;
 
     @Column('int',{

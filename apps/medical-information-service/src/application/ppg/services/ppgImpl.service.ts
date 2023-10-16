@@ -62,6 +62,7 @@ export class PpgServiceImpl implements PpgService{
           let ppgDateChanged = format(new Date(ppg.ppgDate), 'yyyy/MM/dd');
           let medicalRecordId = medicalInformationExist.medicalRecordId;
           let resultPpg = ppg.bloodPressureSistolic - ppg.bloodPressureDiastolic;
+          if(resultPpg < 0) resultPpg = 0;
           let ppgClasification = await this.clasificateBloodPressure(ppg.bloodPressureSistolic, ppg.bloodPressureDiastolic);
           ppgList.push({ ppg: {
             ...ppg,

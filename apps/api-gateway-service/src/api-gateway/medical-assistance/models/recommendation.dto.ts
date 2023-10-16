@@ -8,8 +8,6 @@ export class RequestRecommendationDto{
 
     @ApiProperty()
     @IsString()
-    @MinLength(1)
-    @MaxLength(400)
     recommendation: string;
 }
 

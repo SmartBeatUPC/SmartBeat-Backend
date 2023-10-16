@@ -10,7 +10,7 @@ export class MedicalInformationController {
   @MessagePattern({cmd: 'createMedicalRecordAndMedicalInformation'})
   createMedicalRecordAndMedicalInformation(data:{ id: number, requestMedicalRecordAndInformation: any}) {
     const {id, requestMedicalRecordAndInformation} = data
-    return this.medicalInformationService.createMedicalRecordAndMedicalInformation(id, requestMedicalRecordAndInformation.requestMedicalRecordDto, requestMedicalRecordAndInformation.requestMedicalInformationDto);
+    return this.medicalInformationService.createMedicalRecordAndMedicalInformation(id, requestMedicalRecordAndInformation.requestMedicalRecordDto, requestMedicalRecordAndInformation.requestMedicalInformationDto, requestMedicalRecordAndInformation.requestPpgDto);
   }
 
   @MessagePattern({cmd: 'createMedicalInformation'})

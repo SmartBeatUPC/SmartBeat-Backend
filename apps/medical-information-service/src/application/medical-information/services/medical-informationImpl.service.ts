@@ -5,6 +5,8 @@ import { MedicalInformation, MedicalInformationService, Pathology, Ppg } from 's
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MedicalRecordClient } from 'src/shared/medical-record/medical-record.client';
+import { CreatePpgDto } from 'src/application/index.application';
+import { rangosPresion } from 'src/application/ppg/blood-pressure-clasification';
 
 @Injectable()
 export class MedicalInformationServiceImpl implements MedicalInformationService{
@@ -24,18 +26,36 @@ export class MedicalInformationServiceImpl implements MedicalInformationService{
     }
   }
 
-  async createMedicalRecordAndMedicalInformation(id: number, createMedicalRecordDto: any, createMedicalInformationDto: CreateMedicalInformationDto) {
+  async createMedicalRecordAndMedicalInformation(id: number, createMedicalRecordDto: any, createMedicalInformationDto: CreateMedicalInformationDto, createPpgDto: CreatePpgDto) {
     try{
       const responseMedicalRecord = await this.medicalRecordClient.createMedicalRecord(id,createMedicalRecordDto);
 
       if(!responseMedicalRecord || responseMedicalRecord.success == false) return new MedicalInformationResponse(responseMedicalRecord.message);
       let newMedicalRecord = responseMedicalRecord.resource;
-      
+      let doctorName = responseMedicalRecord.doctorData.name;
+      let doctorLastName = responseMedicalRecord.doctorData.lastName;
       const newMedicalInformation = await this.medicalInformationRepository.save({
       medicalRecordId: newMedicalRecord.id,
       ...createMedicalInformationDto
       });
-    return {newMedicalInformation, newMedicalRecord, success: true};
+
+      if(!newMedicalInformation) return new MedicalInformationResponse('An error occurred while saving medical-information');
+      const ppgSaved = await this.ppgRepository.save({
+        medicalInformationId: newMedicalInformation.id,
+        ppgDate: new Date(),
+        ...createPpgDto
+      })
+      if(!ppgSaved) return new MedicalInformationResponse('An error occurred while saving ppg');
+      let resultPpg = ppgSaved.bloodPressureSistolic - ppgSaved.bloodPressureDiastolic;
+      if(resultPpg < 0) resultPpg = 0;
+      let ppgClasification = await this.clasificateBloodPressure(ppgSaved.bloodPressureSistolic, ppgSaved.bloodPressureDiastolic);
+      
+      let newPpg = {
+        ...ppgSaved,
+        ppgBar:resultPpg,
+        ppgClasification: ppgClasification,
+      }
+    return {newMedicalInformation, newMedicalRecord, newPpg, success: true, doctorName: doctorName, doctorLastName: doctorLastName};
     }catch(error){
       return new MedicalInformationResponse('An error occurred while saving medical-information: '+error.message);
     }
@@ -122,5 +142,19 @@ export class MedicalInformationServiceImpl implements MedicalInformationService{
     }
   }
 
- 
+  async clasificateBloodPressure(sistolica: number, diastolica: number) {
+    const clasificacion = rangosPresion.find((rango) => {
+      return (
+        sistolica >= rango.minSistolica &&
+        sistolica <= rango.maxSistolica &&
+        diastolica >= rango.minDiastolica &&
+        diastolica <= rango.maxDiastolica
+      );
+    });
+    if (clasificacion) {
+      return clasificacion.clasificacion;
+    } else {
+      return 'No clasificado';
+    }
+  }
 }

@@ -4,16 +4,7 @@ import { IsBoolean, IsNumber, IsOptional, IsString, MaxLength, MinLength } from 
 export class RequestSuggestionDto{
 
     @ApiProperty()
-    @IsOptional()
     @IsString()
-    @MinLength(1)
-    @MaxLength(400)
-    alternative: string;
-
-    @ApiProperty()
-    @IsString()
-    @MinLength(1)
-    @MaxLength(400)
     suggestion: string;
 }
 
