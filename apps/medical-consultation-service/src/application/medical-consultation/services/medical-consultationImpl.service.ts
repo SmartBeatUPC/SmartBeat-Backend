@@ -9,6 +9,7 @@ import { MedicalRecordResponse } from 'src/application/medical-record/dto/update
 import { PatientClient } from 'src/shared/patient/patient.client';
 import { DoctorClient } from 'src/shared/doctor/doctor.client';
 import { format } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 
 @Injectable()
 export class MedicalConsultationServiceImpl implements MedicalConsultationService{
@@ -34,7 +35,8 @@ export class MedicalConsultationServiceImpl implements MedicalConsultationServic
         if (!consultationExist) return new MedicalConsultationResponse(`Medical Consultation with id ${consultationId} was not found`);
         let doctorData = await this.doctorClient.findDoctorById(consultationExist.doctorId);
         if(!createMedicalRecord.recordDate) {
-          createMedicalRecord.recordDate = new Date()
+          let peruZone = 'America/Lima'
+          createMedicalRecord.recordDate = utcToZonedTime(new Date(), peruZone);
         } 
 
         const recordPreload = await this.medicalRecordRepository.create(createMedicalRecord);

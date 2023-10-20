@@ -24,7 +24,13 @@ export class MedicalRecordController {
   }
 
   @MessagePattern({cmd:'findAllMedicalRecordsByMedicalConsultationId'})
-  findAllMedicalRecordsByMedicalConsultationId(id: number) {
-    return this.medicalRecordService.findAllMedicalRecordsByMedicalConsultationId(id);
+  findAllMedicalRecordsByMedicalConsultationId(data: {id: number, filter?: number}) {
+    const {id, filter} = data
+    return this.medicalRecordService.findAllMedicalRecordsByMedicalConsultationId(id, filter);
+  }
+
+  @MessagePattern({cmd:'findLastMedicalRecordByMedicalConsultationId'})
+  findLastMedicalRecordByMedicalConsultationId(id: number) {
+    return this.medicalRecordService.findLastByMedicalConsultationId(id);
   }
 }

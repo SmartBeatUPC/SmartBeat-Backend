@@ -46,4 +46,9 @@ export class MedicalInformationController {
     return this.medicalInformationService.calculateBMI(height, weight);
   }
 
+  @MessagePattern({cmd: 'getLastMedicalInformationByMedicalConsultationId'})
+  getLastMedicalInformationByMedicalConsultationId(id: number) {
+    return this.medicalInformationService.getLastMedicalInformationByMedicalConsultationId(id);
+  }
+
 }

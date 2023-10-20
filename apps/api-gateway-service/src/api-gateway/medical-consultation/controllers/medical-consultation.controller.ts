@@ -2,8 +2,8 @@ import { Controller, UseFilters, Inject, Post, Body, Get, Param, Patch, Delete, 
 import { ClientProxy } from "@nestjs/microservices";
 import { ApiTags } from "@nestjs/swagger";
 import { HttpExceptionFilter } from "src/api-gateway/util/http-exception.filter";
-import { RequestMedicalConsultationDto } from "../models/medical-consultation.dto";
-import { RequestMedicalRecordAndInformationDto, RequestMedicalRecordDto } from "../models/medical-record.dto";
+import { RequestFilterLastMedicalInformationDto, RequestMedicalConsultationDto } from "../models/medical-consultation.dto";
+import { RequestMedicalRecordAndInformationDto } from "../models/medical-record.dto";
 
 
 @ApiTags('medical consultations')
@@ -62,10 +62,15 @@ export class MedicalConsultationController {
         return this.medicalInformationService.send({ cmd: 'createMedicalRecordAndMedicalInformation' },{id, requestMedicalRecordAndInformation});
     }
 
+    @Get(':id/medical-information/last')
+    getLastMedicalInformationByMedicalConsultationId(@Param('id', ParseIntPipe) id: number) {
+        return this.medicalInformationService.send({ cmd: 'getLastMedicalInformationByMedicalConsultationId' },id);
+    }
+
     //PPGs
-    @Get(':id/ppgs/')
-    findAllPPGByMedicalConsultationId(@Param('id',ParseIntPipe) id: number) {
-        return this.medicalInformationService.send({ cmd: 'findAllPPGByMedicalConsultationId' }, id);
+    @Post(':id/ppgs/')
+    findAllPPGByMedicalConsultationId(@Param('id',ParseIntPipe) id: number, @Body(new ValidationPipe()) requestFilterLastMedicalInformationDto: RequestFilterLastMedicalInformationDto) {
+        return this.medicalInformationService.send({ cmd: 'findAllPPGByMedicalConsultationId' }, {id, requestFilterLastMedicalInformationDto});
     }
 
 }

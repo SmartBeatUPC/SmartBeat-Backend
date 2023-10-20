@@ -8,6 +8,7 @@ import { MedicalRecordClient } from 'src/shared/medical-record/medical-record.cl
 import { CreatePpgDto } from 'src/application/index.application';
 import { rangosPresion } from 'src/application/ppg/blood-pressure-clasification';
 import { DiagnosticClient } from 'src/shared/diagnostic/diagnostic.client';
+import { utcToZonedTime } from 'date-fns-tz';
 
 @Injectable()
 export class MedicalInformationServiceImpl implements MedicalInformationService{
@@ -35,15 +36,18 @@ export class MedicalInformationServiceImpl implements MedicalInformationService{
       let newMedicalRecord = responseMedicalRecord.resource;
       let doctorName = responseMedicalRecord.doctorData.name;
       let doctorLastName = responseMedicalRecord.doctorData.lastName;
+      let peruZone = 'America/Lima'
+      let newPpgDate = utcToZonedTime(new Date(), peruZone);
       const newMedicalInformation = await this.medicalInformationRepository.save({
       medicalRecordId: newMedicalRecord.id,
       ...createMedicalInformationDto
       });
 
       if(!newMedicalInformation) return new MedicalInformationResponse('An error occurred while saving medical-information');
+      
       const ppgSaved = await this.ppgRepository.save({
         medicalInformationId: newMedicalInformation.id,
-        ppgDate: new Date(),
+        ppgDate: newPpgDate,
         ...createPpgDto
       })
       if(!ppgSaved) return new MedicalInformationResponse('An error occurred while saving ppg');
@@ -102,7 +106,34 @@ export class MedicalInformationServiceImpl implements MedicalInformationService{
       return completeMedicalInformation;
 
     }catch(error){
-      return new MedicalInformationResponse('An error occurred while saving medical-information: '+error.message);
+      return new MedicalInformationResponse('An error occurred while finding medical-information: '+error.message);
+    }
+  }
+
+  async getLastMedicalInformationByMedicalConsultationId(id: number){
+    try{
+      let medicalRecordExist: any = '';
+      try{
+        medicalRecordExist = await this.medicalRecordClient.findLastMedicalRecordByMedicalConsultationId(id);
+        if(!medicalRecordExist || !medicalRecordExist.success) return new MedicalInformationResponse(medicalRecordExist.message)
+      }catch(error){
+        return new MedicalInformationResponse('Medical-Consultation microservice is turned off');
+      }
+      let medicalInformationExist = await this.medicalInformationRepository.findOne({where: {medicalRecordId: medicalRecordExist.resource.id}})
+      if (!medicalInformationExist) return new MedicalInformationResponse(`Medical Information with Medical Record id ${medicalRecordExist.resource.id} not found`);
+
+      let listPathologies = []
+      const pathologies = await this.pathologyRepository.findBy({medicalInformationId: medicalInformationExist.id});
+      if (pathologies || pathologies.length > 0) {
+        await pathologies.forEach((pathology) => {
+            listPathologies.push(pathology.pathology);
+        });
+      }
+
+      return {lastMedicalInformation: medicalInformationExist, pathologies: listPathologies, success: true}
+
+    }catch(error){
+      return new MedicalInformationResponse('An error occurred while finding medical-information: '+error.message);
     }
   }
 

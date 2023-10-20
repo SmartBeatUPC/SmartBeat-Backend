@@ -22,9 +22,10 @@ export class PpgServiceImpl implements PpgService{
       if(!medicalInformationExist) return new PpgResponse(`Medical Information with id ${informationId} not found`)
       const ppgExistPrev = await this.ppgRepository.findOneBy({medicalInformationId: medicalInformationExist.id});
       if(ppgExistPrev) return new PpgResponse(`PPG with Medical Information id ${informationId} is registered. Please, use the update service`)
+      let newPpgDate = new Date()
       const newPPG = await this.ppgRepository.save({
       ...createPpgDto,
-      ppgDate: new Date(),
+      ppgDate: newPpgDate,
       medicalInformationId: medicalInformationExist.id
       });
     return new PpgResponse('',newPPG);
@@ -47,14 +48,14 @@ export class PpgServiceImpl implements PpgService{
     }
   }
 
-  async findAllPPGByConsultationId(consultationId: number){
-    const medicalRecordsResponse = await this.medicalRecordClient.findAllMedicalRecordsByMedicalConsultationId(consultationId);
+  async findAllPPGByConsultationId(id: number, filter? : number){
+    const medicalRecordsResponse = await this.medicalRecordClient.findAllMedicalRecordsByMedicalConsultationId(id, filter);
 
     if(!medicalRecordsResponse.medicalRecords || medicalRecordsResponse.medicalRecords.length == 0) return new PpgResponse(medicalRecordsResponse.message);
-
     let ppgList = [];
     let i: number;
     for(i=0; i<medicalRecordsResponse.medicalRecords.length;i++){
+      
       let medicalInformationExist = await this.medicalInformationRepository.findOneBy({medicalRecordId: medicalRecordsResponse.medicalRecords[i].id})
       if(medicalInformationExist){
         let ppg = await this.ppgRepository.findOneBy({medicalInformationId: medicalInformationExist.id});
@@ -73,9 +74,10 @@ export class PpgServiceImpl implements PpgService{
         }
       }
     }
-    if(!ppgList || ppgList.length == 0) return new PpgResponse(`PPGs were not recorded in this Medical Consultation Id ${consultationId}.`);
+    if(!ppgList || ppgList.length == 0) return new PpgResponse(`PPGs were not recorded in this Medical Consultation Id ${id}.`);
     return {ppgs: ppgList, success: true};
   }
+  
 
 
   async clasificateBloodPressure(sistolica: number, diastolica: number) {

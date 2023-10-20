@@ -28,8 +28,17 @@ export class MedicalRecordClient {
     return response;
   }
 
-  async findAllMedicalRecordsByMedicalConsultationId(id:number){
-    const response = await lastValueFrom(this.clientProxy.send({ cmd: 'findAllMedicalRecordsByMedicalConsultationId' }, id)
+  async findAllMedicalRecordsByMedicalConsultationId(id:number, filter?: number){
+    const response = await lastValueFrom(this.clientProxy.send({ cmd: 'findAllMedicalRecordsByMedicalConsultationId' }, {id, filter})
+      .pipe(
+        map(response => response)
+      ));
+
+    return response;
+  }
+
+  async findLastMedicalRecordByMedicalConsultationId(id:number){
+    const response = await lastValueFrom(this.clientProxy.send({ cmd: 'findLastMedicalRecordByMedicalConsultationId' }, id)
       .pipe(
         map(response => response)
       ));

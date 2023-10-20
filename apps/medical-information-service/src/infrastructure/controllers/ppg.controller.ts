@@ -19,8 +19,9 @@ export class PpgController {
   }
 
   @MessagePattern({cmd: 'findAllPPGByMedicalConsultationId'})
-  findAllPPGByMedicalConsultationId(id: number) {
-    return this.ppgService.findAllPPGByConsultationId(id);
+  findAllPPGByMedicalConsultationId(data: {id: number, requestFilterLastMedicalInformationDto: any}) {
+    const {id, requestFilterLastMedicalInformationDto} = data
+    return this.ppgService.findAllPPGByConsultationId(id, requestFilterLastMedicalInformationDto.filter);
   }
 
 
