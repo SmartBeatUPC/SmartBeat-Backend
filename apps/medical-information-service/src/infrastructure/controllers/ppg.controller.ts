@@ -18,10 +18,16 @@ export class PpgController {
     return this.ppgService.findPPGByInformationId(id);
   }
 
-  @MessagePattern({cmd: 'findAllPPGByMedicalConsultationId'})
-  findAllPPGByMedicalConsultationId(data: {id: number, requestFilterLastMedicalInformationDto: any}) {
+  @MessagePattern({cmd: 'findAllPPGByMedicalConsultationIdV2'})
+  findAllPPGByMedicalConsultationIdV2(data: {id: number, requestFilterLastMedicalInformationDto: any}) {
     const {id, requestFilterLastMedicalInformationDto} = data
     return this.ppgService.findAllPPGByConsultationId(id, requestFilterLastMedicalInformationDto.filter);
+  }
+
+  @MessagePattern({cmd: 'findAllPPGByMedicalConsultationId'})
+  findAllPPGByMedicalConsultationId(data: {id: number, filter: number}) {
+    const {id, filter} = data
+    return this.ppgService.findAllPPGByConsultationId(id, filter);
   }
 
 

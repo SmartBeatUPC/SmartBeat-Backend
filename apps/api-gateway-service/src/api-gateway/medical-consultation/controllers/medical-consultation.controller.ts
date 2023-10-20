@@ -68,9 +68,13 @@ export class MedicalConsultationController {
     }
 
     //PPGs
-    @Post(':id/ppgs/')
-    findAllPPGByMedicalConsultationId(@Param('id',ParseIntPipe) id: number, @Body(new ValidationPipe()) requestFilterLastMedicalInformationDto: RequestFilterLastMedicalInformationDto) {
-        return this.medicalInformationService.send({ cmd: 'findAllPPGByMedicalConsultationId' }, {id, requestFilterLastMedicalInformationDto});
-    }
+    /*@Post(':id/ppgs/')
+    findAllPPGByMedicalConsultationIdPrev(@Param('id',ParseIntPipe) id: number, @Body(new ValidationPipe()) requestFilterLastMedicalInformationDto: RequestFilterLastMedicalInformationDto) {
+        return this.medicalInformationService.send({ cmd: 'findAllPPGByMedicalConsultationIdV2' }, {id, requestFilterLastMedicalInformationDto});
+    }*/
 
+    @Get(':id/ppgs/:filter')
+    findAllPPGByMedicalConsultationId(@Param('id',ParseIntPipe) id: number, @Param('filter',ParseIntPipe) filter: number) {
+        return this.medicalInformationService.send({ cmd: 'findAllPPGByMedicalConsultationId' }, {id, filter});
+    }
 }
