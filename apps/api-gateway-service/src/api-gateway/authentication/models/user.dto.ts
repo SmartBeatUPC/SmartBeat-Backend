@@ -12,8 +12,6 @@ export class RequestUserDto{
 
     @ApiProperty()
     @IsString()
-    @MinLength(6)
-    @MaxLength(10)
     @IsNotEmpty()
     password: string;
 
@@ -30,8 +28,6 @@ export class RequestVerifyUserDto {
 
     @ApiProperty()
     @IsString()
-    @MinLength(6)
-    @MaxLength(10)
     @IsNotEmpty()
     password: string;
  
