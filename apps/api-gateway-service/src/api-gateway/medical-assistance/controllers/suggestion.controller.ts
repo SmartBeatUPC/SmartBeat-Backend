@@ -2,7 +2,7 @@ import { Controller, UseFilters, Inject, Post, Body, Get, Param, Patch, Delete, 
 import { ClientProxy } from "@nestjs/microservices";
 import { ApiTags } from "@nestjs/swagger";
 import { HttpExceptionFilter } from "src/api-gateway/util/http-exception.filter";
-import { RequestSuggestionDto } from "../models/suggestion.dto";
+import { RequestGPTIdsDto, RequestSuggestionDto } from "../models/suggestion.dto";
 import { RequestGPTDto } from "../models/recommendation.dto";
 
 @ApiTags('suggestions')
@@ -36,5 +36,10 @@ export class SuggestionController {
     @Post('/GPT')
     generateGPTSuggestion2(@Body() requestGPTDto: RequestGPTDto) {
         return this.medicalAssistanceService.send({ cmd: 'makeGPTSuggestion' }, requestGPTDto);
+    }
+
+    @Post('/GPT-V2')
+    generateGPTSuggestionWithIds(@Body() requestGPTDto: RequestGPTIdsDto) {
+        return this.medicalAssistanceService.send({ cmd: 'makeGPTSuggestionWithIds' }, requestGPTDto);
     }
 }

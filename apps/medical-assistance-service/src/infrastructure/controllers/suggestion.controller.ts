@@ -8,9 +8,9 @@ export class SuggestionController {
   constructor(private readonly suggestionService: SuggestionServiceImpl) {}
 
   @MessagePattern({cmd: 'createSuggestion'})
-  create(data: { recordId: number, createSuggestionDto: CreateSuggestionDto}) {
-    const {recordId, createSuggestionDto} = data
-    return this.suggestionService.create(recordId, createSuggestionDto);
+  create(data: { id: number, createSuggestionDto: CreateSuggestionDto}) {
+    const {id, createSuggestionDto} = data
+    return this.suggestionService.create(id, createSuggestionDto);
   }
 
   @MessagePattern({cmd: 'findAllSuggestions'})
@@ -35,9 +35,15 @@ export class SuggestionController {
   }
 
   @MessagePattern({cmd: 'makeGPTSuggestion'})
-  makeGPTSuggestion(data: {methodology: boolean, medicalInformation: any, pathologies: string[]}) {
-    const {methodology, medicalInformation, pathologies} = data
-    return this.suggestionService.makeGPTSuggestion(methodology, medicalInformation, pathologies);
+  makeGPTSuggestion(data: {methodology: boolean, age: number, gender: string, ppg: any, medicalInformation: any, pathologies: string[]}) {
+    const {methodology, age, gender, ppg,medicalInformation, pathologies} = data
+    return this.suggestionService.makeGPTSuggestion(methodology, age, gender, ppg, medicalInformation, pathologies);
+  }
+
+  @MessagePattern({cmd: 'makeGPTSuggestionWithIds'})
+  makeGPTSuggestionWithIds(data: {methodology: boolean, patientId: number, medicalInformationId: number}) {
+    const {methodology, patientId, medicalInformationId} = data
+    return this.suggestionService.makeGPTSuggestionWithIds(methodology, patientId, medicalInformationId);
   }
 
 }

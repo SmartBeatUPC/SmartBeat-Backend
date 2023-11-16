@@ -57,7 +57,7 @@ export class HealthCenterServiceImpl implements HealthCenterService {
       const deletedHealthCenter = await this.healthCenterRepository.delete({
         id: id
       })
-      return deletedHealthCenter;
+      return {deletedHealthCenter, success:true};
 
     }catch(error){
       return new HealthCenterResponse('An error occurred while deleting health-center: '+error.message)

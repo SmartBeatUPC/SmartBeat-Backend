@@ -11,7 +11,7 @@ export class PpgController {
   
     constructor(@Inject('MEDICAL_INFORMATION_SERVICE') private medicalInformationService: ClientProxy) {}
   
-    @Get()
+    /*@Get()
     findAllPpgs() {
         return this.medicalInformationService.send({ cmd: 'findAllPpgs' }, '');
     }
@@ -19,12 +19,17 @@ export class PpgController {
     @Get(':id')
     findOnePpg(@Param('id', ParseIntPipe) id: number) {
         return this.medicalInformationService.send({ cmd: 'findOnePpg' }, id);
-    }
+    }*/
   
   
     @Patch(':id')
     updatePpg(@Param('id', ParseIntPipe) id: number, @Body() updatePpgDto: RequestPpgDto) {
         return this.medicalInformationService.send({ cmd: 'updatePpg' }, {id, updatePpgDto});
+    }
+
+    @Post('/clasificateBloodPressure')
+    clasificateBloodPressure(@Body() bloodPressure: RequestPpgDto) {
+        return this.medicalInformationService.send({ cmd: 'clasificateBloodPressure' }, bloodPressure);
     }
   
 }

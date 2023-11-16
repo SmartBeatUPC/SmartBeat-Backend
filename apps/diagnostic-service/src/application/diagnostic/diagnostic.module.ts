@@ -11,7 +11,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports:[
     TypeOrmModule.forFeature([Diagnostic]),
     TypeOrmModule.forFeature([MedicalPrescription]),
-    
   ]
 })
 export class DiagnosticModule {}

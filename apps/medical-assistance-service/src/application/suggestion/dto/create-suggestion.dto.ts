@@ -1,9 +1,6 @@
-import { IsString, IsNumber, IsNotEmpty } from "class-validator";
+import { IsString } from "class-validator";
 
 export class CreateSuggestionDto {
-
-    @IsString()
-    alternative: string;
 
     @IsString()
     suggestion: string;

@@ -2,10 +2,10 @@ import { Controller, UseFilters, Inject, Post, Body, Get, Param, Patch, Delete, 
 import { ClientProxy } from "@nestjs/microservices";
 import { ApiTags } from "@nestjs/swagger";
 import { HttpExceptionFilter } from "src/api-gateway/util/http-exception.filter";
-import { RequestMedicalRecordDto } from "../models/medical-record.dto";
 import { RequestRecommendationDto } from "src/api-gateway/medical-assistance/models/recommendation.dto";
 import { RequestSuggestionDto } from "src/api-gateway/medical-assistance/models/suggestion.dto";
 import { RequestMedicalInformationDto } from "src/api-gateway/medical-information/models/medical-information.dto";
+import { RequestCompleteDiagnosticDto, RequestDiagnosticDto } from "src/api-gateway/diagnostic/models/diagnostic.dto";
 
 @ApiTags('medical records')
 @Controller('medical-record')
@@ -14,6 +14,7 @@ export class MedicalRecordController {
   
     constructor(@Inject('MEDICAL_CONSULTATION_SERVICE') private medicalConsultationService: ClientProxy,
     @Inject('MEDICAL_ASSISTANCE_SERVICE') private medicalAssistanceService: ClientProxy,
+    @Inject('DIAGNOSTIC_SERVICE') private diagnosticService: ClientProxy,
     @Inject('MEDICAL_INFORMATION_SERVICE') private medicalInformationService: ClientProxy) {}
 
   
@@ -44,4 +45,21 @@ export class MedicalRecordController {
     createMedicalInformation(@Param('id', ParseIntPipe) id: number, @Body() createMedicalInformationDto: RequestMedicalInformationDto) {
         return this.medicalInformationService.send({ cmd: 'createMedicalInformation' },{id, createMedicalInformationDto});
     }
+
+    //Diagnostic
+    /*@Post(':id/diagnostic')
+    createDiagnostic(@Param('id', ParseIntPipe)id: number, @Body() createDiagnosticDto: RequestDiagnosticDto) {
+       return this.diagnosticService.send({ cmd: 'createDiagnostic' }, {id,createDiagnosticDto});
+    }*/
+
+    @Post(':id/diagnostic')
+    createCompleteDiagnostic(@Param('id', ParseIntPipe)id: number, @Body() completeDiagnostic: RequestCompleteDiagnosticDto) {
+        return this.diagnosticService.send({ cmd: 'createCompleteDiagnostic' }, {id,completeDiagnostic});
+    }
+
+    @Get(':id/diagnostic')
+    findCompleteDiagnostic(@Param('id', ParseIntPipe)id: number){
+        return this.diagnosticService.send({ cmd: 'findCompleteDiagnosticByMedicalRecordId' }, id);
+    }
+    
 }

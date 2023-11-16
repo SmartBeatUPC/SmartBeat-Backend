@@ -7,7 +7,6 @@ export class User {
     id: number;
 
     @Column('varchar',{
-        length: 25,
         unique: true
     })
     email: string;

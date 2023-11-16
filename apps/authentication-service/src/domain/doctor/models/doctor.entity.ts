@@ -25,7 +25,7 @@ export class Doctor {
     gender: string;
 
     @Column('varchar',{
-        length: 10
+        length: 20
     })
     dni: string;
 

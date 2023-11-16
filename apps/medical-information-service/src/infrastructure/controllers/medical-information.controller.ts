@@ -7,13 +7,19 @@ import { MedicalInformationServiceImpl, CreateMedicalInformationDto, UpdateMedic
 export class MedicalInformationController {
   constructor(private readonly medicalInformationService: MedicalInformationServiceImpl) {}
 
-  @MessagePattern({cmd: 'createMedicalInformation'})
-  create(data:{ recordId: number, createMedicalInformationDto: CreateMedicalInformationDto}) {
-    const {recordId, createMedicalInformationDto} = data
-    return this.medicalInformationService.create(recordId, createMedicalInformationDto);
+  @MessagePattern({cmd: 'createMedicalRecordAndMedicalInformation'})
+  createMedicalRecordAndMedicalInformation(data:{ id: number, requestMedicalRecordAndInformation: any}) {
+    const {id, requestMedicalRecordAndInformation} = data
+    return this.medicalInformationService.createMedicalRecordAndMedicalInformation(id, requestMedicalRecordAndInformation.requestMedicalRecordDto, requestMedicalRecordAndInformation.requestMedicalInformationDto, requestMedicalRecordAndInformation.requestPpgDto);
   }
 
-  @MessagePattern({cmd: 'findAllMedicalInformation'})
+  @MessagePattern({cmd: 'createMedicalInformation'})
+  create(data:{ id: number,createMedicalInformationDto: CreateMedicalInformationDto}) {
+    const {id ,createMedicalInformationDto} = data
+    return this.medicalInformationService.create(id, createMedicalInformationDto);
+  }
+
+  @MessagePattern({cmd: 'findAllMedicalInformations'})
   findAll() {
     return this.medicalInformationService.findAll();
   }
@@ -21,6 +27,11 @@ export class MedicalInformationController {
   @MessagePattern({cmd: 'findOneMedicalInformation'})
   findOne(id: number) {
     return this.medicalInformationService.findOne(id);
+  }
+
+  @MessagePattern({cmd: 'getCompleteMedicalInformationById'})
+  getCompleteMedicalInformationById(id: number) {
+    return this.medicalInformationService.getCompleteMedicalInformationById(id);
   }
 
   @MessagePattern({cmd: 'updateMedicalInformation'})
@@ -33,6 +44,11 @@ export class MedicalInformationController {
   calculateBMI(data:{height: number, weight: number}) {
     const { height, weight} = data
     return this.medicalInformationService.calculateBMI(height, weight);
+  }
+
+  @MessagePattern({cmd: 'getLastMedicalInformationByMedicalConsultationId'})
+  getLastMedicalInformationByMedicalConsultationId(id: number) {
+    return this.medicalInformationService.getLastMedicalInformationByMedicalConsultationId(id);
   }
 
 }

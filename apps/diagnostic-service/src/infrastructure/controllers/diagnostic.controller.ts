@@ -7,24 +7,35 @@ export class DiagnosticController {
   constructor(private readonly diagnosticService: DiagnosticServiceImpl) {}
 
   @MessagePattern({cmd: 'createDiagnostic'})
-  create(data: {consultationId: number, createDiagnosticDto: CreateDiagnosticDto}) {
-    const {consultationId, createDiagnosticDto} = data
-    return this.diagnosticService.create(consultationId, createDiagnosticDto);
+  create(data: {id: number, createDiagnosticDto: CreateDiagnosticDto}) {
+    const {id, createDiagnosticDto} = data
+    return this.diagnosticService.create(id, createDiagnosticDto);
   }
 
-  @MessagePattern({cmd: 'findAllDiagnostic'})
+  @MessagePattern({cmd: 'createCompleteDiagnostic'})
+  createCompleteDiagnostic(data: {id: number, completeDiagnostic: any}) {
+    const {id, completeDiagnostic} = data
+    return this.diagnosticService.createCompleteDiagnostic(id, completeDiagnostic.createDiagnosticDto, completeDiagnostic.medicalPrescriptions);
+  }
+
+  @MessagePattern({cmd: 'findAllDiagnostics'})
   findAll() {
     return this.diagnosticService.findAll();
   }
 
-  @MessagePattern({cmd: 'findOneDiagnosticById'})
+  @MessagePattern({cmd: 'findOneDiagnostic'})
   findOne(id: number) {
     return this.diagnosticService.findOne(id);
   }
 
-  @MessagePattern({cmd: 'findOneDiagnosticByMedicalConsultationId'})
-  findByMedicalConsultation(consultationId: number) {
-    return this.diagnosticService.findByMedicalConsultationId(consultationId);
+  @MessagePattern({cmd: 'findOneDiagnosticByMedicalRecordId'})
+  findByMedicalRecord(id: number) {
+    return this.diagnosticService.findByMedicalRecordId(id);
+  }
+
+  @MessagePattern({cmd: 'findCompleteDiagnosticByMedicalRecordId'})
+  findCompleteDiagnosticByMedicalRecord(id: number) {
+    return this.diagnosticService.findCompleteDiagnosticByMedicalRecordId(id);
   }
 
   @MessagePattern({cmd: 'updateDiagnostic'})

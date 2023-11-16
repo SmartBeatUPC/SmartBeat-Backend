@@ -1,10 +1,10 @@
-import { Controller, UseFilters, Inject, Post, Body, Get, Param, Patch, Delete, ParseIntPipe } from "@nestjs/common";
+import { Controller, UseFilters, Inject, Post, Body, Get, Param, Patch, Delete, ParseIntPipe, ValidationPipe } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { ApiTags } from "@nestjs/swagger";
 import { HttpExceptionFilter } from "src/api-gateway/util/http-exception.filter";
-import { RequestMedicalConsultationDto } from "../models/medical-consultation.dto";
-import { RequestMedicalRecordDto } from "../models/medical-record.dto";
-import { RequestDiagnosticDto } from "src/api-gateway/diagnostic/models/diagnostic.dto";
+import { RequestFilterLastMedicalInformationDto, RequestMedicalConsultationDto } from "../models/medical-consultation.dto";
+import { RequestMedicalRecordAndInformationDto } from "../models/medical-record.dto";
+
 
 @ApiTags('medical consultations')
 @Controller('medical-consultation')
@@ -12,7 +12,7 @@ import { RequestDiagnosticDto } from "src/api-gateway/diagnostic/models/diagnost
 export class MedicalConsultationController {
   
     constructor(@Inject('MEDICAL_CONSULTATION_SERVICE') private medicalConsultationService: ClientProxy,
-    @Inject('DIAGNOSTIC_SERVICE') private diagnosticService: ClientProxy) {}
+    @Inject('MEDICAL_INFORMATION_SERVICE') private medicalInformationService: ClientProxy) {}
 
     @Post()
     createMedicalConsultation(@Body() createMedicalConsultationDto: RequestMedicalConsultationDto) {
@@ -41,10 +41,10 @@ export class MedicalConsultationController {
     }
 
     //Medical Record
-    @Post(':id/medical-record')
+    /*@Post(':id/medical-record-prev')
     createMedicalRecord(@Param('id', ParseIntPipe) id: number, @Body() createMedicalRecordDto: RequestMedicalRecordDto) {
         return this.medicalConsultationService.send({ cmd: 'createMedicalRecord' }, {id,createMedicalRecordDto});
-    }
+    }*/
 
     @Get(':id/medical-record/')
     findAllMedicalRecordsByMedicalConsultationId(@Param('id',ParseIntPipe) id: number) {
@@ -56,9 +56,25 @@ export class MedicalConsultationController {
         return this.medicalConsultationService.send({ cmd: 'findOneMedicalRecordByIdAndMedicalConsultationId' }, {id,recordId});
     }
 
-    //Diagnostic
-    @Post(':id/diagnostic')
-    createDiagnostic(@Param('id', ParseIntPipe)id: number, @Body() createDiagnosticDto: RequestDiagnosticDto) {
-        return this.diagnosticService.send({ cmd: 'createDiagnostic' }, {id,createDiagnosticDto});
+    //Medical Record & Medical Information
+    @Post(':id/medical-record')
+    createMedicalRecordAndMedicalInformation(@Param('id', ParseIntPipe) id: number, @Body(new ValidationPipe()) requestMedicalRecordAndInformation: RequestMedicalRecordAndInformationDto) {
+        return this.medicalInformationService.send({ cmd: 'createMedicalRecordAndMedicalInformation' },{id, requestMedicalRecordAndInformation});
+    }
+
+    @Get(':id/medical-information/last')
+    getLastMedicalInformationByMedicalConsultationId(@Param('id', ParseIntPipe) id: number) {
+        return this.medicalInformationService.send({ cmd: 'getLastMedicalInformationByMedicalConsultationId' },id);
+    }
+
+    //PPGs
+    /*@Post(':id/ppgs/')
+    findAllPPGByMedicalConsultationIdPrev(@Param('id',ParseIntPipe) id: number, @Body(new ValidationPipe()) requestFilterLastMedicalInformationDto: RequestFilterLastMedicalInformationDto) {
+        return this.medicalInformationService.send({ cmd: 'findAllPPGByMedicalConsultationIdV2' }, {id, requestFilterLastMedicalInformationDto});
+    }*/
+
+    @Get(':id/ppgs/:filter')
+    findAllPPGByMedicalConsultationId(@Param('id',ParseIntPipe) id: number, @Param('filter',ParseIntPipe) filter: number) {
+        return this.medicalInformationService.send({ cmd: 'findAllPPGByMedicalConsultationId' }, {id, filter});
     }
 }

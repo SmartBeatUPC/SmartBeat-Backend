@@ -9,9 +9,9 @@ export class RecommendationController {
   constructor(private readonly recommendationService: RecommendationServiceImpl) {}
 
   @MessagePattern({cmd: 'createRecommendation'})
-  create(data: { recordId: number, createRecommendationDto: CreateRecommendationDto}) {
-    const {recordId, createRecommendationDto} = data
-    return this.recommendationService.create(recordId, createRecommendationDto);
+  create(data: { id: number, createRecommendationDto: CreateRecommendationDto}) {
+    const {id, createRecommendationDto} = data
+    return this.recommendationService.create(id, createRecommendationDto);
   }
 
   @MessagePattern({cmd: 'findAllRecommendations'})
@@ -36,10 +36,15 @@ export class RecommendationController {
   }
 
   @MessagePattern({cmd: 'makeGPTRecommendation'})
-  makeGPTRecommendation(data: {methodology: boolean, medicalInformation: any, pathologies: string[]}) {
-    const {methodology, medicalInformation, pathologies} = data
-    return this.recommendationService.makeGPTRecommendation(methodology, medicalInformation, pathologies);
+  makeGPTRecommendation(data: {methodology: boolean, age: number, gender: string, ppg: any, medicalInformation: any, pathologies: string[]}) {
+    const {methodology, age, gender, ppg, medicalInformation, pathologies} = data
+    return this.recommendationService.makeGPTRecommendation(methodology, age, gender, ppg,medicalInformation, pathologies);
   }
 
+  @MessagePattern({cmd: 'makeGPTRecommendationWithIds'})
+  makeGPTRecommendationWithIds(data: {methodology: boolean, patientId: number, medicalInformationId: number}) {
+    const {methodology, patientId, medicalInformationId} = data
+    return this.recommendationService.makeGPTRecommendationWithIds(methodology, patientId, medicalInformationId);
+  }
   
 }

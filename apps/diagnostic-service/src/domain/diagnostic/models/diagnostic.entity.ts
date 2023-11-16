@@ -6,14 +6,14 @@ export class Diagnostic {
     id: number;
 
     @Column('varchar',{
-        length: 300,
+        length: 500,
         name: 'diagnostic_result'
     })
     diagnosticResult: string;
 
     @Column('int',{
-        name: 'medical_consultation_id'
+        name: 'medical_record_id'
     })
-    medicalConsultationId: number;
+    medicalRecordId: number;
 
 }

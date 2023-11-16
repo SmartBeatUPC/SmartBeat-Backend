@@ -19,8 +19,8 @@ export class CreatePatientDto {
 
     @IsString()
     @IsNotEmpty()
-    @MinLength(8)
-    @MaxLength(10)
+    @MinLength(5)
+    @MaxLength(20)
     dni: string;
     
     @IsString()

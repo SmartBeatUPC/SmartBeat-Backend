@@ -7,7 +7,7 @@ import { MedicalRecordServiceImpl, CreateMedicalRecordDto, UpdateMedicalRecordDt
 export class MedicalRecordController {
   constructor(private readonly medicalRecordService: MedicalRecordServiceImpl) {}
 
-  @MessagePattern({cmd:'findAllMedicalRecord'})
+  @MessagePattern({cmd:'findAllMedicalRecords'})
   findAll() {
     return this.medicalRecordService.findAll();
   }
@@ -18,13 +18,19 @@ export class MedicalRecordController {
   }
 
   @MessagePattern({cmd:'findOneMedicalRecordByIdAndMedicalConsultationId'})
-  findOneMedicalRecordByIdAndMedicalConsultationId(data: {consultationId: number, id: number}) {
-    const {consultationId, id} = data
-    return this.medicalRecordService.findByIdAndMedicalConsultationId(consultationId, id);
+  findOneMedicalRecordByIdAndMedicalConsultationId(data: {id: number, recordId: number}) {
+    const {id, recordId} = data
+    return this.medicalRecordService.findByIdAndMedicalConsultationId(id, recordId);
   }
 
   @MessagePattern({cmd:'findAllMedicalRecordsByMedicalConsultationId'})
-  findAllMedicalRecordsByMedicalConsultationId(consultationId: number) {
-    return this.medicalRecordService.findAllMedicalRecordsByMedicalConsultationId(consultationId);
+  findAllMedicalRecordsByMedicalConsultationId(data: {id: number, filter?: number}) {
+    const {id, filter} = data
+    return this.medicalRecordService.findAllMedicalRecordsByMedicalConsultationId(id, filter);
+  }
+
+  @MessagePattern({cmd:'findLastMedicalRecordByMedicalConsultationId'})
+  findLastMedicalRecordByMedicalConsultationId(id: number) {
+    return this.medicalRecordService.findLastByMedicalConsultationId(id);
   }
 }

@@ -20,7 +20,7 @@ export class Patient {
     age: number;
 
     @Column('varchar',{
-        length: 10
+        length: 20
     })
     dni: string;
 

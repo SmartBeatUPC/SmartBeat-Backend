@@ -25,8 +25,8 @@ export class RequestDoctorDto{
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    @MinLength(8)
-    @MaxLength(10)
+    @MinLength(5)
+    @MaxLength(20)
     dni: string;
 
     @ApiProperty()

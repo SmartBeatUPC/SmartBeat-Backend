@@ -5,5 +5,6 @@ export interface MedicalPrescriptionService{
     findAll();
     findOne(id: number);
     update(id: number, updateMedicalPrescriptionDto: UpdateMedicalPrescriptionDto);
-    findByDiagnosticId(diagnosticId: number);
+    findOneByIdAndDiagnosticId(id: number, medicalPrescriptionId: number);
+    findAllByDiagnosticId(id: number);
 }

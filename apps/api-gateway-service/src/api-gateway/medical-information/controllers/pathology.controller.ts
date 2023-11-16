@@ -12,8 +12,8 @@ export class PathologyController {
     constructor(@Inject('MEDICAL_INFORMATION_SERVICE') private medicalInformationService: ClientProxy) {}
   
     @Get()
-    findAllPathologys() {
-        return this.medicalInformationService.send({ cmd: 'findAllPathologys' }, '');
+    findAllPathologies() {
+        return this.medicalInformationService.send({ cmd: 'findAllPathologies' }, '');
     }
   
     @Get(':id')

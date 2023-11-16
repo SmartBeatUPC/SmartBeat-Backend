@@ -1,20 +1,13 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity('recommendation')
+@Entity('suggestion')
 export class Suggestion {
 
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column('varchar',{
-        length: 400
-    })
+    @Column('varchar')
     suggestion: string;
-
-    @Column('varchar',{
-        length: 400
-    })
-    alternative: string;
 
     @Column('int',{
         name: 'medical_record_id'

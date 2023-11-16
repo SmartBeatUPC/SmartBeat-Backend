@@ -24,8 +24,15 @@ export class Ppg {
     })
     heartRate: number;
 
+    @Column('timestamp',{
+        name: 'ppg_date',
+        nullable: true
+    })
+    ppgDate: Date;
+
     @Column('int',{
         nullable: true,
+        name: 'medical_information_id'
     })
-    medical_information_id: number;
+    medicalInformationId: number;
 }

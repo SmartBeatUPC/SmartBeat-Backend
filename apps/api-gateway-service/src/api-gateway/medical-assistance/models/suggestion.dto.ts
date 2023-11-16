@@ -1,17 +1,23 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, MaxLength, MinLength } from "class-validator";
+import { IsBoolean, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 
 export class RequestSuggestionDto{
 
     @ApiProperty()
     @IsString()
-    @MinLength(1)
-    @MaxLength(400)
-    alternative: string;
+    suggestion: string;
+}
+
+export class RequestGPTIdsDto{
+    @ApiProperty()
+    @IsBoolean()
+    methodology: boolean;
 
     @ApiProperty()
-    @IsString()
-    @MinLength(1)
-    @MaxLength(400)
-    suggestion: string;
+    @IsNumber()
+    patientId: number;
+
+    @ApiProperty()
+    @IsNumber()
+    medicalInformationId: number;
 }

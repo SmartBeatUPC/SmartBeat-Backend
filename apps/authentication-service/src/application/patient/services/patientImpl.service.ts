@@ -70,7 +70,7 @@ export class PatientServiceImpl implements PatientService {
       const deletedPatient = await this.patientRepository.delete({
         id: id
       })
-      return deletedPatient;
+      return {deletedPatient, success:true};
     }catch(error){
       return new PatientResponse('An error occurred while deleting patient: '+error.message)
     }

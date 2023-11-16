@@ -70,7 +70,7 @@ export class DoctorServiceImpl implements DoctorService{
       const deletedDoctor = await this.doctorRepository.delete({
         id: id
       })
-      return deletedDoctor;
+      return {deletedDoctor, success:true};
     }catch(error){
       return new DoctorResponse('An error occurred while deleting doctor: '+error.message)
     }

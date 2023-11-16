@@ -13,14 +13,36 @@ export class MedicalConsultationController {
   }
 
   @MessagePattern({cmd: 'createMedicalRecord'})
-  createMedicalRecord(data: {consultationId: number, createMedicalRecordDto: CreateMedicalRecordDto}) {
-    const {consultationId, createMedicalRecordDto} = data
-    return this.medicalConsultationService.createMedicalRecordByMedicalConsultationId(consultationId, createMedicalRecordDto);
+  createMedicalRecord(data: {id: number, createMedicalRecordDto: CreateMedicalRecordDto}) {
+    const {id, createMedicalRecordDto} = data
+    return this.medicalConsultationService.createMedicalRecordByMedicalConsultationId(id, createMedicalRecordDto);
   }
 
-  @MessagePattern({cmd: 'findAllMedicalConsultation'})
+  @MessagePattern({cmd: 'findAllMedicalConsultations'})
   findAll() {
     return this.medicalConsultationService.findAll();
+  }
+
+  @MessagePattern({cmd: 'findAllMedicalConsultationsByPatientId'})
+  findAllMedicalConsultationsByPatientId(id: number) {
+    return this.medicalConsultationService.findAllByPatientId(id);
+  }
+
+  @MessagePattern({cmd: 'findAllMedicalConsultationsByDoctorId'})
+  findAllMedicalConsultationsByDoctorId(id: number) {
+    return this.medicalConsultationService.findAllByDoctorId(id);
+  }
+
+  @MessagePattern({cmd: 'findOneMedicalConsultationByIdAndPatientId'})
+  findOneMedicalConsultationByIdAndPatientId(data: {id, medicalConsultationId}) {
+    const {id, medicalConsultationId} = data
+    return this.medicalConsultationService.findOneByIdAndPatientId(id, medicalConsultationId);
+  }
+
+  @MessagePattern({cmd: 'findOneMedicalConsultationByIdAndDoctorId'})
+  findOneMedicalConsultationByIdAndDoctorId(data: {id, medicalConsultationId}) {
+    const {id, medicalConsultationId} = data
+    return this.medicalConsultationService.findOneByIdAndDoctorId(id, medicalConsultationId);
   }
 
   @MessagePattern({cmd: 'findOneMedicalConsultation'})
